@@ -14,6 +14,7 @@
     {{ content }}
   </article>
 
+  {% if page.resources %}
   Resources:
   <ul>
   {% for resource in page.resources %}
@@ -22,5 +23,6 @@
     </li>
   {% endfor %}
   </ul>
+  {% endif %}
 
 </div>
