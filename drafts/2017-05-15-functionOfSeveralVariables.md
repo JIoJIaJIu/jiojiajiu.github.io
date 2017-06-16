@@ -7,5 +7,7 @@ resources:
 ---
 Real-valued function of n real variables
 
-x1, x2
-
+`\(a^2 + b^2 = c^2\)`
+\begin{equation}
+ E = mc^2
+\end{equation}

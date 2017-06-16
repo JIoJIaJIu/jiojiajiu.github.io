@@ -1,6 +1,7 @@
 ---
 #layout: default
 ---
+
 <div class="post">
 
   <header class="post-header">
@@ -16,7 +17,9 @@
   Resources:
   <ul>
   {% for resource in page.resources %}
-    <li>{{resource}}</li>
+    <li>
+      <a href="{{resource[1]}}" target="_blank">{{resource[0]}}</a>
+    </li>
   {% endfor %}
   </ul>
 
