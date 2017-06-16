@@ -55,4 +55,15 @@
   </ul>
   {% endif %}
 
+  {% if page.docs %}
+  Docs:
+  <ul class="resources">
+  {% for doc in page.docs %}
+    <li>
+      <a href="{{doc.url}}" target="_blank">{{doc.title}}</a>
+    </li>
+  {% endfor %}
+  </ul>
+  {% endif %}
+
 </div>
