@@ -8,20 +8,26 @@ layout: default
   <h1 class="page-heading">Posts</h1>
   {% endcomment %}
 
-  <ul class="post-list">
-    {% for post in site.posts %}
-      <li>
-        {{ post }}
-
-        {% comment %}
-        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
-
-        <h2>
-          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-        </h2>
-        {% endcomment %}
-      </li>
+  <ul class="category-list">
+    {% for category in site.categories reversed %}
+    <li>
+      <h1>{{ category[0] }}</h1>
+        <ul class="post-list">
+          {% assign categories = category[1] | sort: 'name' | sort: 'date' %}
+          {% for post in categories %}
+            <li>
+              {% comment %}
+              <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+              {% endcomment %}
+              <h2>
+                <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+              </h2>
+            </li>
+          {% endfor %}
+        </ul>
+    </li>
     {% endfor %}
+
   </ul>
 
   <!--<p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>-->
