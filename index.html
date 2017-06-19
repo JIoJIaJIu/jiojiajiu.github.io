@@ -9,11 +9,11 @@ layout: default
   {% endcomment %}
 
   <ul class="category-list">
-    {% for category in site.categories reversed %}
+    {% for category in site.categories %}
     <li>
       <h1>{{ category[0] }}</h1>
         <ul class="post-list">
-          {% assign categories = category[1] | sort: 'name' | sort: 'date' %}
+          {% assign categories = category[1] | sort: 'name'  %}
           {% for post in categories %}
             <li>
               {% comment %}
