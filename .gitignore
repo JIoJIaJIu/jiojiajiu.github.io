@@ -2,5 +2,6 @@
 *sw?
 
 _site/
+_includes/scripts.html
 node_modules/
 dist/

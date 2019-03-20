@@ -25,7 +25,7 @@ plugins:
   - hash-joiner
 exclude:
   - package.json
+  - package-lock.json
   - node_modules
   - src
-  - dist
   - webpack.config.js
