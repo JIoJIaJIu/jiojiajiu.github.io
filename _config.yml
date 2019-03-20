@@ -21,5 +21,11 @@ defaults:
       path: ""
     values:
       layout: "default"
-gems:
+plugins:
   - hash-joiner
+exclude:
+  - package.json
+  - node_modules
+  - src
+  - dist
+  - webpack.config.js
