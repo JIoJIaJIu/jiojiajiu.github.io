@@ -4,7 +4,6 @@
 
     <a class="site-title" href="{{ site.baseurl }}/">{{ site.title }}</a>
 
-    {% comment %}
     <nav class="site-nav">
       <a href="#" class="menu-icon">
         <svg viewBox="0 0 18 15">
@@ -15,14 +14,22 @@
       </a>
 
       <div class="trigger">
+        {% assign pages = site.pages | where: "name",  "about.md" %}
+        {% for page in pages limit:1 %}
+          {% if page.title %}
+          <a class="page-link" href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% comment %}
         {% for page in site.pages %}
           {% if page.title %}
           <a class="page-link" href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
           {% endif %}
         {% endfor %}
+        {% endcomment %}
       </div>
     </nav>
-    {% endcomment %}
 
   </div>
 
