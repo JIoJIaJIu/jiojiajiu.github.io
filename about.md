@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-![](http://localhost:4000/assets/page1.png)
+![](https://jiojiajiu.github.io/assets/page1.png)
 
 
-![](http://localhost:4000/assets/page21.png)
+![](https://jiojiajiu.github.io/assets/page21.png)
