@@ -179,6 +179,7 @@
 .category-list {
     margin-left: 0;
     list-style: none;
+    overflow: hidden;
 
     > li {
         margin-bottom: $spacing-unit;
