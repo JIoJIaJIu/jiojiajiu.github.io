@@ -1,0 +1,277 @@
+html {
+  height: 100%; }
+
+body {
+  font-family: CustomSansSerif,'Lucida Grande',Arial,sans-serif;
+  background: white;
+  margin: 0;
+  min-height: 100%; }
+
+body.dark {
+  background: #242F3E; }
+  body.dark .links a.gh {
+    color: #8E8E93; }
+
+.c {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: flex-start; }
+
+.links {
+  text-align: center; }
+  .links p:first-child {
+    margin: 50px 0; }
+    .links p:first-child a {
+      text-decoration: none;
+      color: #46A3E6; }
+  .links p:last-child {
+    font-size: 12px;
+    margin-bottom: 5px; }
+  .links a.gh {
+    color: #8E8E93; }
+
+.popup {
+  position: absolute;
+  z-index: 999;
+  background: white;
+  display: none;
+  color: #000;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px rgba(24, 45, 59, 0.3); }
+  .popup .popup_title {
+    text-decoration: none;
+    white-space: pre;
+    color: #000;
+    font-weight: bold;
+    padding-right: 50px; }
+  .popup .popup_description div {
+    margin-top: 5px;
+    overflow: hidden;
+    white-space: pre; }
+    .popup .popup_description div span:first-child {
+      float: left;
+      margin-right: 10px; }
+    .popup .popup_description div span:last-child {
+      float: right; }
+
+body.dark .popup {
+  background: #1C2533;
+  color: #fff; }
+  body.dark .popup .popup_title {
+    color: #fff; }
+
+.graph_grid svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2; }
+
+.graph_grid line {
+  stroke-width: 1;
+  stroke: rgba(24, 45, 59, 0.1); }
+
+.graph_grid text {
+  font-size: 10px;
+  fill: #8E8E93; }
+
+body.dark .graph_grid line {
+  stroke: rgba(255, 255, 255, 0.1); }
+
+.graph_interactive svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2; }
+
+.graph_interactive line {
+  stroke-width: 1;
+  stroke: #99A5AD; }
+
+.graph_interactive circle {
+  fill: #fff; }
+
+body.dark .graph_interactive circle {
+  fill: #242F3E; }
+
+
+.histogram_graph_interactive {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2; }
+
+.plot {
+  margin: 0 0 10px 0;
+  position: relative;
+  display: inline-block;
+  opacity: 1;
+  transition: opacity 0.2s; }
+  .plot .plot_heading {
+    overflow: hidden;
+    margin-left: 5px;
+    font-size: 14px; }
+    .plot .plot_heading .plot_title {
+      float: left; }
+    .plot .plot_heading .plot_range {
+      float: right; }
+    .plot .plot_heading .zoom_out {
+      display: none;
+      color: #108BE3;
+      fill: #108BE3;
+      text-decoration: none;
+      outline: none;
+      float: left; }
+      .plot .plot_heading .zoom_out .icon {
+        display: inline-block;
+        text-align: center; }
+      .plot .plot_heading .zoom_out svg {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        font-size: 0; }
+  .plot .plot_internal {
+    position: relative;
+    display: inline-block; }
+    .plot .plot_internal .graph {
+      margin: 20px 5px 30px 5px;
+      display: inline-block; }
+
+.plot.is_zoomed .zoom_out {
+  display: block; }
+
+.plot.is_zoomed .plot_title {
+  display: none; }
+
+.plot.disappear {
+  opacity: 0; }
+
+body.dark .plot_heading {
+  color: white; }
+
+.preview {
+  position: relative;
+  height: 47px;
+  width: 500px; }
+  .preview * {
+    user-select: none;
+    -moz-user-select: none; }
+  .preview .canvas {
+    height: 44px;
+    width: 476px;
+    margin: 0 12px; }
+  .preview .slider {
+    position: absolute;
+    display: none;
+    top: 0;
+    height: 47px;
+    width: 500px; }
+    .preview .slider.grabbing .slider_left,
+    .preview .slider.grabbing .slider_right,
+    .preview .slider.grabbing .slider_view {
+      cursor: grabbing; }
+    .preview .slider .slider_left,
+    .preview .slider .slider_right {
+      width: 12px;
+      height: 53px;
+      position: absolute;
+      right: 0;
+      background: #C0D1E1;
+      z-index: 1;
+      cursor: grab;
+      touch-action: none; }
+      .preview .slider .slider_left span,
+      .preview .slider .slider_right span {
+        height: 12px;
+        display: block;
+        width: 0px;
+        border-left: #fff 1px solid;
+        border-right: #fff 1px solid;
+        margin: auto;
+        margin-top: 20.5px; }
+    .preview .slider .slider_left {
+      border-top-left-radius: 15px;
+      border-bottom-left-radius: 15px; }
+    .preview .slider .slider_right {
+      left: 0;
+      right: none;
+      border-top-right-radius: 15px;
+      border-bottom-right-radius: 15px; }
+    .preview .slider .slider_view {
+      cursor: grab;
+      border-top: #C0D1E1 3px solid;
+      border-bottom: #C0D1E1 3px solid;
+      box-sizing: border-box;
+      position: relative;
+      float: left;
+      height: 53px;
+      touch-action: none; }
+    .preview .slider .overlay {
+      height: 47px;
+      left: 0;
+      background: rgba(226, 238, 249, 0.6);
+      position: relative;
+      min-width: 12px; }
+    .preview .slider .overlay_left {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px; }
+    .preview .slider .overlay_right {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px; }
+    .preview .slider .overlay_left,
+    .preview .slider .overlay_right {
+      float: left; }
+
+body.dark .preview .slider_left,
+body.dark .preview .slider_right {
+  background: #56626D; }
+
+body.dark .preview .slider_view {
+  border-top: #56626D 3px solid;
+  border-bottom: #56626D 3px solid; }
+
+body.dark .preview .overlay {
+  background: rgba(48, 66, 89, 0.6); }
+
+.custom_checkbox {
+  margin: 10px 5px 0;
+  height: 20px;
+  line-height: 20px;
+  display: inline-block;
+  color: white;
+  font-weight: bold;
+  transition: background 0.5s; }
+  .custom_checkbox input[type="checkbox"] {
+    display: inline-block; }
+  .custom_checkbox svg {
+    display: none;
+    width: 16px;
+    height: 16px;
+    fill: white; }
+  .custom_checkbox label {
+    display: inline-block;
+    transition: color 0.5s; }
+  .custom_checkbox, .custom_checkbox * {
+    cursor: pointer;
+    -moz-user-select: none;
+    user-select: none; }
+
+.custom_checkbox.active {
+  padding: 10px 25px;
+  border-radius: 35px;
+  border: 2px solid transparent; }
+  .custom_checkbox.active input[type="checkbox"] {
+    display: none; }
+  .custom_checkbox.active.checked {
+    padding: 10px 15px; }
+    .custom_checkbox.active.checked svg {
+      display: inline-block; }
+
