@@ -1,1 +1,4087 @@
-!function(t){function e(n){if(i[n])return i[n].exports;var s=i[n]={i:n,l:!1,exports:{}};return t[n].call(s.exports,s,s.exports,e),s.l=!0,s.exports}var i={};e.m=t,e.c=i,e.d=function(t,i,n){e.o(t,i)||Object.defineProperty(t,i,{enumerable:!0,get:n})},e.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},e.t=function(t,i){if(1&i&&(t=e(t)),8&i)return t;if(4&i&&"object"==typeof t&&t&&t.__esModule)return t;var n=Object.create(null);if(e.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:t}),2&i&&"string"!=typeof t)for(var s in t)e.d(n,s,function(e){return t[e]}.bind(null,s));return n},e.n=function(t){var i=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(i,"a",i),i},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="/",e(e.s=11)}([function(t){const e={min:function(t){var e=Math.min;return Array.isArray(t)?e.apply(null,t):e.apply(null,arguments)},max:function(t){var e=Math.max;return Array.isArray(t)?e.apply(null,t):e.apply(null,arguments)},getWidth:function(t){return t.getBoundingClientRect().width},getHeight:function(t){return t.getBoundingClientRect().height},width:function(t){return t.getBoundingClientRect().width},height:function(t){return t.getBoundingClientRect().height},extend:function(){return Object.assign.apply(null,arguments)},last:function(t){return Array.isArray(t)?t[t.length-1]:null},forIn:function(t,e){if(e)for(let i in t)e(t[i],i)},forEach:function(t,e){if(e&&t)for(let i=0,n=t.length;i<n;i++)e(t[i],i)},round:function(t,e){e=e||0;let i=Math.pow(10,e);return Math.round(t*i)/i},get SVG_NS(){return"http://www.w3.org/2000/svg"},erase:function(t){for(;t.childNodes.length;)t.removeChild(t.firstChild)},addClass:function(t,e){t.classList.add(e)},removeClass:function(t,e){t.classList.remove(e)},hasClass:function(t,e){return t.classList.contains(e)},offsetTop:function(t){return t.getBoundingClientRect().top+(pageYOffset||document.documentElement.scrollTop)},offsetLeft:function(t){return t.getBoundingClientRect().left+(pageXOffset||document.documentElement.scrollLeft)},isChild:function(t,e){for(;t&&t!==document.documentElement;)if((t=t.parentNode)===e)return!0;return!1},requestWidth:function(){let t=e,i=0<window.innerWidth?window.innerWidth:screen.width;return i>500*t.dpr&&(i=500*t.dpr),i},get dpr(){return 1},get yRatio(){screen.width},get hRatio(){MAX_HEIGHT,screen.height},shake(t){const i=e;i.hasClass(t,"shaked")||(i.addClass(t,"shaked"),setTimeout(()=>{i.removeClass(t,"shaked")},820))}};t.exports=e},function(t,e,i){function n(){this._container=document.body,this._el=this._init(),this._el.addEventListener("click",t=>{t.preventDefault(),this._onClick&&this._onClick()})}const s=i(17),a=i(0);i(18);n.prototype={show:function(t,e){this._el;let i=this._findBestX(t);this._el.style.left=`${i}px`,this._el.style.top=`${e}px`,this._el.style.display="block",this._w=a.width(this._el)},hide:function(){this._el.style.display="none"},setTitle:function(t){this._el.querySelector(".popup_title").innerHTML=t||""},showTitle:function(){this._titleIsHidden&&(this._el.querySelector(".popup_title").style.display="block",this._titleIsHidden=!1)},hideTitle:function(){this._titleIsHidden||(this._el.querySelector(".popup_title").style.display="none",this._titleIsHidden=!0)},setOnClick:function(t){this._onClick=t},_findBestX:function(t){let e=this._el,i=this.width,n=e.parentNode.getBoundingClientRect().width,s=t-i-10;if(0>s){let e=t+20;return e+i<n?e:e+i-n>1*s?0:n-i}return s},setDescription:function(t){let e=this._el.querySelector(".popup_description");a.erase(e),a.forEach(t,t=>{let i=document.createElement("div"),n=document.createElement("span"),s=document.createElement("span");i.appendChild(n),n.innerHTML=t.title,i.appendChild(s),s.innerHTML=this._formatValue(t.value),s.style.color=t.color,e.appendChild(i)})},_formatValue:function(t){if(!t)return 0;let e=[];for(;t;){let i=t%1e3;(t=Math.floor(t/1e3))&&(2==(i=`${i}`).length?i=`0${i}`:1==i.length&&(i=`00${i}`)),e.unshift(i)}return e.join(" ")},get el(){return this._el},get width(){return this._w||100},_init:function(){let t=document.createElement("div");t.innerHTML=s;let e=t.firstChild;return this._container.appendChild(e),e}},t.exports={Popup:n,singleton:new n}},function(t,e,i){function n(){this._data=null,this._container=null,this._el=null,this._options=null,this._grid=null,this._interfaces=[]}var s=Number.NEGATIVE_INFINITY,a=Number.POSITIVE_INFINITY;const r=i(0);n.prototype={drawGrid:function(){if(!this._grid)return;let t=a,e=s,i=a,n=s;r.forIn(this._data,s=>{s.enabled&&(t=r.min(s.visibleMinXValue,t),e=r.max(s.visibleMaxXValue,e),i=r.min(s.visibleMinYValue,i),n=r.max(s.visibleMaxYValue,n))}),this._grid.draw(t,e,i,n)},computeData:function(t,e){this._data={},r.forIn(t.types,(t,i)=>{if("x"===t)return;let n=!0;e&&(n=-1===e.indexOf(i)),this._data[i]={id:i,enabled:n}});let i=t.columns[0].slice(1);r.forEach(t.columns,e=>{if("x"!==e[0]){let n=e[0],s=this._data[n];s.x=i,s.y=e.slice(1),s.color=t.colors[n],s.name=t.names[n]}})},enable:function(t){let e=this._data[t];!e||e.enabled||(e.enabled=!0,this.draw(this._xScale,this._xTranslate,!0))},disable:function(t){let e=this._data[t];e&&e.enabled&&(e.enabled=!1,this.draw(this._xScale,this._xTranslate,!0))},getAnyEnabledRecord:function(){for(let t in this._data)if(this._data[t].enabled)return this._data[t];return null},getVisibleMinXValue:function(){let t;return r.forIn(this._data,e=>{e.enabled&&(t=e.visibleMinXValue)}),t},getVisibleMaxXValue:function(){let t;return r.forIn(this._data,e=>{e.enabled&&(t=e.visibleMaxXValue)}),t},getValues:function(t){let e;for(let t in this._data)if((e=this._data[t]).enabled)break;let i=this.interpolateX(t,e.minXValue,e.xRatio),n=this.getClosestIndexByXValue(i,e.x),s=[];return r.forIn(this._data,t=>{if(t.enabled){let e=t.x,i=t.y;s.push({id:t.id,name:t.name,xValue:e[n],yValue:i[n],color:t.color,i:n})}}),s},getMinXValue:function(){for(let t in this._data){let e=this._data[t];if(e.enabled)return e.minXValue}},getMaxXValue:function(){for(let t in this._data){let e=this._data[t];if(e.enabled)return e.maxXValue}},interpolateXValue:function(t,e,i){let n=i*(t-e)*this._xScale,s=this._xTranslate*this.width;return r.round(n-s)},interpolateX:function(t,e,i){return e+(t=this._xTranslate*this.width+t)/(i*this._xScale)},interpolateYValue:function(t,e,i){let n=i*t*this._yScale;return this.height-n},interpolateY:function(t,e,i){return r.round((this.height-t)/(i*this._yScale))},getClosestIndexByXValue:function(t,e){let i,n;for(let s=0,a=e.length;s<a&&(n=s,i=0==s?0:s-1,!(e[s]>t));s++);return e[n]-t>t-e[i]?i:n},get state(){return{xTranslate:this._xTranslate,xScale:this._xScale,isZoomed:this._options.isZoomed}},get container(){return this._container},get marginTop(){let t=parseFloat(getComputedStyle(this._el).marginTop);return delete this.marginTop,Object.defineProperty(this,"marginTop",{get:()=>t}),t},get marginLeft(){let t=parseFloat(getComputedStyle(this._el).marginLeft);return delete this.marginLeft,Object.defineProperty(this,"marginLeft",{get:()=>t}),t},get marginBottom(){let t=parseFloat(getComputedStyle(this._el).marginBottom);return delete this.marginBottom,Object.defineProperty(this,"marginBottom",{get:()=>t}),t},get height(){let t=r.getHeight(this._ctx.canvas);return delete this.height,Object.defineProperty(this,"height",{get:()=>t}),t},get width(){let t=r.getWidth(this._ctx.canvas);return delete this.width,Object.defineProperty(this,"width",{get:()=>t}),t},get disabled(){let t=[];return r.forIn(this._data,(e,i)=>{e.enabled||t.push(i)}),t},addInterface:function(t){this.supportInterface(t),this._interfaces.push(t)},supportInterface:function(t){return-1!==this._interfaces.indexOf(t)}},t.exports=n},function(t,e,i){function n(t){this._graph=t,this._el=null,this._canvas=null,this.wrap(t),this.render(),this.bindHover(this._canvas)}const s=i(16),a=i(0),r=i(5),h=i(1).singleton;let l=!1;try{let t=Object.defineProperty({},"passive",{get:function(){l=!0}});window.addEventListener("testPassive",null,t),window.removeEventListener("testPassive",null,t)}catch(e){}n.prototype={wrap:function(){throw new Error("Implement wrap function")},bindHover:function(t){if(!this._graph.supportInterface("IInteractive"))throw new Error("Graph should support IInteractive");let e=null,i=!1;t.addEventListener("mouseenter",()=>{this.bindKeyboard&&this.bindKeyboard()}),t.addEventListener("mousemove",n=>{if(!i&&n.target===t){let t=n.offsetX-this._graph.marginLeft;0>t||t>this._graph.width||(this._graph.IInteractive_select(t,n),e=!0)}}),t.addEventListener("touchstart",n=>{if(n.target!==t)return;i=!0;let s=n.touches[0].clientX-this._graph.marginLeft;0>s||((s-=a.offsetLeft(t))>this._graph.width||(this._graph.IInteractive_select(s,n),e=!0))},!!l&&{passive:!1}),t.addEventListener("mouseleave",t=>{t.relatedTarget===h.el||a.isChild(t.relatedTarget,h.el)||requestAnimationFrame(()=>{this._graph.IInteractive_deselect(),e=!1})}),t.addEventListener("click",()=>{i||e&&this._graph.IInteractive_click()})},render:function(){let t=this._graph.container,e=document.createElement("div");e.innerHTML=s;let i=this._el=e.firstChild;t.appendChild(i);let n=i.querySelector("svg");this._canvas=n},showPopup:function(t,e,i){void 0===i.xValue?h.hideTitle():(h.setTitle(this._formatTimestamp(i.xValue,i.isZoomed,i.xValueStep)),h.showTitle()),h.setOnClick(i.onClick),h.setDescription(i.desc),h.show(t,e)},hidePopup:function(){h.hide()},_formatTimestamp:function(t,e,i){let n=new Date(t);return e?i<36e5?r.getRoundHoursWithMinutes(n):r.getRoundHours(n):`${r.getDay(n)}, ${n.getUTCDate()} ${r.getMon(n)} ${n.getUTCFullYear()}`}},t.exports=n},function(t,e,n){function s(t,e){this._graph=t,this._container=t.container,this._svg=null,this._options=a.extend({},l,e),this._drawn=!1,this._xStep=this._options.xStep,this._xAxisNode=null,this._yAxisNode=null,this.render()}const a=n(0),r=n(20),h=n(5);n(21);const l={xStep:100*a.dpr,yStep:60*a.dpr,minXStep:50*a.dpr,maxXStep:130*a.dpr};s.prototype={draw:function(t,e,i,n){this._drawn?(this._redrawXAxis(t,e),this._drawYAxis(i,n)):(this._drawXAxis(t,e),this._drawYAxis(i,n),this._drawn=!0)},drawDualY:function(t,e,i){if(2<t.length||2<e.length)throw new Error("Not supported");this._drawn?this._redrawXAxis(t[0][0],e[0][0]):(this._drawXAxis(t[0][0],e[0][0]),this._drawn=!0),this._drawYAxis(t[0][1],e[0][1],i[0],!1),2==t.length&&this._drawYTitles(t[1][1],e[1][1],i[1],!0)},render:function(){let t=document.createElement("div");t.innerHTML=r;let e=t.firstChild;this._container.appendChild(e),this._svg=e.querySelector("svg")},_clearRect:function(){for(;this._svg.childNodes.length;)this._svg.removeChild(this._svg.firstChild)},_drawXAxis:function(t,e){let i=document.createElementNS(a.SVG_NS,"g"),n=document.createElementNS(a.SVG_NS,"line");i.appendChild(n),this._svg.appendChild(i);let s=this._graph,r=s.marginLeft,h=r+s.width,l=s.marginTop+s.height;n.setAttribute("x1",r),n.setAttribute("y1",l),n.setAttribute("x2",h),n.setAttribute("y2",l),this._xAxisNode=document.createElementNS(a.SVG_NS,"g"),i.appendChild(this._xAxisNode);let o=s.width/this._xStep;this._xValueStep=(e-t)/o,this._drawXTitles(t,e)},_redrawXAxis:function(t,e){let i=(e-t)/this._xValueStep;this._xStep=this._graph.width/i,this._clearNode(this._xAxisNode),(this._xStep<this._options.minXStep||this._xStep>this._options.maxXStep)&&(this._xStep=this._options.xStep,i=this._graph.width/this._xStep,this._xValueStep=(e-t)/i),this._drawXTitles(t,e)},_drawXTitles:function(t,e){function i(t,e,i,n){let s=document.createElementNS(a.SVG_NS,"text");h._xAxisNode.appendChild(s),s.setAttribute("x",t),s.setAttribute("y",e),s.innerHTML=o(i),n&&s.setAttribute("text-anchor","end")}let n=this._graph,s=n.marginLeft,r=n.marginTop+n.height,h=this,l=n.width/this._xStep;{const i=36e5,n=12e5,s=3e5;this._xValueStep<4*s?(this._xValueStep=s,l=(e-t)/this._xValueStep,this._xStep=this._graph.width/l):this._xValueStep<3*n?(this._xValueStep=n,l=(e-t)/this._xValueStep,this._xStep=this._graph.width/l):this._xValueStep<2*i&&(this._xValueStep=i,l=(e-t)/this._xValueStep,this._xStep=this._graph.width/l)}let o=this._getXConvertor("timestamp",t,t+this._xValueStep);for(let e,a=0;a<=l;a++)e=0===a?t:t+this._xValueStep*a,i(s+a*this._xStep,r+n.marginBottom/2,e,a===l)},_drawYAxis:function(t,e,n,s){function r(t,e,i){let n=l.marginLeft,s=n+l.width,r=l.marginTop+t;if(!i){let t=document.createElementNS(a.SVG_NS,"line");h._yAxisNode.appendChild(t),t.setAttribute("x1",n),t.setAttribute("y1",r),t.setAttribute("x2",s),t.setAttribute("y2",r)}}this._yAxisNode?this._clearNode(this._yAxisNode):(this._yAxisNode=document.createElementNS(a.SVG_NS,"g"),this._svg.appendChild(this._yAxisNode));let h=this,l=this._graph,o=l.height/this._options.yStep;for(i=0;i<=o;i++){i;r(l.height-i*this._options.yStep,0,0===i)}this._drawYTitles(t,e,n,s)},_drawYTitles(t,e,n,s){function r(t,e,i,r){let h=document.createElementNS(a.SVG_NS,"text");t.appendChild(h),h.setAttribute("x",e),h.setAttribute("y",i-5),n&&h.setAttribute("fill",n),s&&h.setAttribute("text-anchor","end"),h.innerHTML=o(r)}let h=this._graph,l=h.height/this._options.yStep,o=this._getYConvertor("number"),d=s?h.width+h.marginLeft:h.marginLeft;for(i=0;i<=l;i++){let n=i*((e-t)/l),s=h.height-i*this._options.yStep+h.marginTop;r(this._yAxisNode,d,s,n)}},_getYConvertor:function(t){if("number"!==t)throw new Error(`The type ${t} is not supported`);return function(t){return t>1e6?`${a.round(t/1e6)}M`:t>1e4?`${a.round(t/1e3)}K`:a.round(t)}},_getXConvertor:function(t,e,i){if("timestamp"!==t)throw new Error(`The type ${t} is not supported`);let n=i-e;return n>864e5?function(t){let e=new Date(t);return`${e.getDate()} ${h.getMon(e)}`}:n>216e5&&n<72e5?function(t){let e=new Date(t);return`${h.getRoundHours(e)} ${e.getDate()} ${h.getMon(e)}`}:n<72e5?function(t){let e=new Date(t);return`${h.getRoundHoursWithMinutes(e)}`}:function(t){let e=new Date(t);return h.getRoundHours(e)}},_clearNode:function(t){for(;t.childNodes.length;)t.removeChild(t.firstChild)}},t.exports=s},function(t){const e=["January","February","March","April","May","June","July","August","September","October","November","December"],i=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];t.exports={getRoundHours:function(t){let e=t.getUTCHours();return 30<=t.getUTCMinutes()&&(e+=1),`${e=2===(e=`${e=24==e?0:e}`).length?e:`0${e}`}:00`},getRoundHoursWithMinutes:function(t){let e=t.getUTCHours(),i=t.getUTCMinutes();return`${e=2===(e=`${e=24===e?0:e}`).length?e:`0${e}`}:${i=2===(i=`${i}`).length?i:`0${i}`}`},getMonth:function(t){let i=t.getUTCMonth();return e[i]},getMon:function(t){let i=t.getUTCMonth();return e[i].substr(0,3)},getDay:function(t){let e=t.getUTCDay();return i[e].substr(0,3)}}},function(t){function e(){this._data={},this._dataByDays={}}e.prototype={load:function(t,e){if(this._data[t])return e&&e(null,this._data[t]);let i=new XMLHttpRequest,n=this;i.addEventListener("load",function(){if(200!==i.status)return e&&e(i.status);let s=i.response;s.id=t,n._data[t]=s,e&&e(null,s)}),i.open("GET",this._getPath(`${t}/overview.json`)),i.responseType="json",i.send()},loadByTimestamp:function(t,e,i){let n=this._dataByDays[t];n||(n=this._dataByDays[t]={});let s=new Date(e),a=`${s.getMonth()+1}`;a=2===a.length?a:`0${a}`;let r=`${s.getFullYear()}-${a}`,h=n[r];h||(h=n[r]={});let l=`${s.getDate()}`;if(l=2===l.length?l:`0${l}`,n=h[l])return i(null,n);let o=new XMLHttpRequest;o.addEventListener("load",function(){if(200!==o.status)return i&&i(o.status);let e=o.response;e.id=t,h[l]=e,i&&i(null,e)}),o.open("GET",this._getPath(`${t}/${r}/${l}.json`)),o.responseType="json",o.send()},getData:function(t){let e=this._data[t];if(!e)throw new Error("Load first data before usage");return e},_getPath:function(t){return`${t}`}},t.exports=new e},function(t,e,n){function s(t,e,i){this._container=t,this._options=r.extend({},d,i),this._canvas=null,this._el=null,this._ctx=null,this._data=null,this._grid=i.withGrid?new o(this):null,this._interfaces=[],this._xScale=1,this._yScale=1,this._xTranslate=0,this._stack=[],this.computeData(e,this._options.disabled),this.render(),this.draw()}function a(){l.call(this),this.draw=function(t,e,i){this._xScale=t||this._xScale,this._xTranslate=void 0===e?this._xTranslate:e,this._ctx.clearRect(0,0,this.width,this.height),this._stack=[],r.forIn(this._data,t=>{t.enabled&&this._drawBar(t.x,t.y,t,i)}),this._grid&&this.drawGrid()},this.render=function(){let t=document.createElement("div");t.innerHTML=h;let e=this._el=t.firstChild;this._container.appendChild(e),this._canvas=e.querySelector("canvas"),this._canvas.setAttribute("width",this._options.width),this._canvas.setAttribute("height",this._options.height),this._ctx=this._canvas.getContext("2d")},this.select=function(t){this.draw(this._xScale,this._xTranslate,t)},this.deselect=function(){this.draw(this._xScale,this._xTranslate)},this._drawBar=function(t,e,n,s){let a=n.minXValue=t[0],h=n.maxXValue=r.last(t),l=n.xRatio=this.width/(h-a),o=n.minYValue=0,d=e;if(this._options.scaleY){let t=this.interpolateX(0,n.minXValue,n.xRatio),e=this.interpolateX(this.width,n.minXValue,n.xRatio),i=this.getClosestIndexByXValue(t,n.x),s=this.getClosestIndexByXValue(e,n.x);d=d.slice(i,s)}let c=n.maxYValue=r.max(d),u=n.yRatio=this.height/(c-o),_=this.width/t.length*this._xScale;if(this._ctx.fillStyle=n.color,s){let r,h=this.interpolateX(s,n.minXValue,n.xRatio),o=this.getClosestIndexByXValue(h,n.x),d=this.interpolateXValue(t[0],a,l);for(i=0;i<t.length-1;i++){r=this.interpolateYValue(e[i],null,u);let n=this.interpolateXValue(t[i+1],a,l);this._ctx.globalAlpha=i===o?1:.5,this._ctx.fillRect(d,r,n-d,this.height-r),d=n}this._ctx.globalAlpha=i===o?1:.5,this._ctx.fillRect(d,r,d,this.height-r)}else{this._ctx.globalAlpha=1;let n,s=this.interpolateXValue(t[0],a,l);for(i=0;i<t.length-1;i++){n=this.interpolateYValue(e[i],null,u);let r=this.interpolateXValue(t[i+1],a,l);this._ctx.fillRect(s,n,r-s,this.height-n),s=r}this._ctx.fillRect(s,n,_,this.height-n)}n.visibleMinXValue=this.interpolateX(0,a,l),n.visibleMaxXValue=this.interpolateX(this.width,a,l),n.visibleMinYValue=this.interpolateY(this.height,o,u),n.visibleMaxYValue=this.interpolateY(0,o,u)},this.getClosestIndexByXValue=function(t,e){let i=1;for(let n=e.length;i<n;i++)if(e[i]>t)return i-1;return i-1}}const r=n(0),h=n(34);n(35);const l=n(2),o=n(4),d={width:500,height:100};a.prototype=Object.create(l.prototype),s.prototype=new a,t.exports=s},function(t,e,i){function n(t){r.call(this,t),this._xValue=null,this._onClick=this._onClick.bind(this)}const s=i(0),a=i(36);i(37);const r=i(3);i(1).singleton;n.prototype=Object.assign({},r.prototype,{wrap:function(){let t=this._graph,e=this;t.addInterface("IInteractive"),t.IInteractive_select=function(i){t.select(i);let n,a=t.getValues(i),r=[];s.forEach(a,t=>{r.push({title:t.name,value:t.yValue,color:t.color}),n=t.xValue}),e._xValue=n;let h=s.offsetTop(e._el);i+=s.offsetLeft(e._el),e.showPopup(i,h,{xValue:n,onClick:e._onClick,desc:r,isZoomed:t.state.isZoomed})},t.IInteractive_deselect=function(){t.deselect(),e.hidePopup()},t.IInteractive_click=function(){e._onClick()}},render:function(){let t=this._graph.container,e=document.createElement("div");e.innerHTML=a;let i=this._el=e.firstChild;this._canvas=this._el,t.appendChild(i)},_onClick:function(){let t=document.createEvent("Event");t.initEvent("zoom",!0,!0),t.xValue=this._xValue,t.xTranslate=this._graph.state.xTranslate,t.xScale=this._graph.state.xScale,this._canvas.dispatchEvent(t)}}),t.exports=n},function(t,e,i){const n=i(0);t.exports={SLIDER_HEIGHT:47*n.dpr,PREVIEW_HEIGHT:47*n.dpr,CANVAS_HEIGHT:41*n.dpr,SLIDER_LEFT_WIDTH:14*n.dpr,SLIDER_RIGHT_WIDTH:14*n.dpr,SLIDER_BORDER:3*n.dpr}},function(){},function(t,e,i){i(12);const n=i(0),s=i(13),a=i(6);let r=0;window.addEventListener("load",()=>{function t(){let t="Switch to";t+=0==r?" Night Mode":" Day Mode",d.innerHTML=t}let e=new s(".g1");a.load(1,function(t,i){t||e.draw(i,{title:"Followers"})});let i=new s(".g2");a.load(2,function(t,e){t||i.draw(e,{title:"Interactions"})});let h=new s(".g3");a.load(3,function(t,e){t||(h.determineDriver(e),h.draw(e,{title:"Messages"}))});let l=new s(".g4");a.load(4,function(t,e){t||(l.determineDriver(e),l.draw(a.getData(4),{title:"Views"}))});let o=new s(".g5");a.load(5,function(t,e){t||(o.determineDriver(e),o.draw(a.getData(5),{title:"Apps"}))});let d=document.querySelector("#mode-switcher");t(),d.addEventListener("click",function(e){e.preventDefault(),0==r?(n.addClass(document.body,"dark"),r=1):(n.removeClass(document.body,"dark"),r=0),t()})})},function(){},function(t,e,i){function n(t,e){this._container=document.querySelector(t),this.setDriver(e&&e.driver),this._plot=new c(this._container),this._preview=null,this._checkboxGroup=null,this._dataId=null,this._title=null,this._isZoomed=!1,this._xScale=null,this._xTranslate=null,this._container.style.width=`${s.requestWidth()}px`,this._container.addEventListener("zoom",t=>{t.stopPropagation(),this.zoomIn(t.xValue,t.xScale,t.xTranslate)}),this._container.addEventListener("zoomToPie",t=>{t.stopPropagation(),this.zoomToPie(t.xValue,t.xScale,t.xTranslate,t.data)}),this._container.addEventListener("zoomout",t=>{t.stopPropagation(),this.zoomOut()})}const s=i(0),a=i(6),r=i(14),h=i(23),l=i(27),o=i(33),d=i(38),c=i(41),u=i(44),_=i(47),p=i(1).singleton;n.prototype={draw:function(t,e){this._dataId=t.id,this._title=e&&e.title,this._plot.draw(t,this._driver,e),this._preview=new u(this._container,{onChange:this._onChange.bind(this)}),this._preview.draw(t,this._previewDriver),this.drawCheckboxes(t)},drawCheckboxes:function(t,e){this._checkboxGroup||(this._checkboxGroup=new _(this._container));let i=1;("pie"===this._driver.name||"area"===this._driver.name)&&(i=2),this._checkboxGroup.draw(t,{onChange:(t,e)=>{this._toggleGraph(t,e)},disabled:e,minChecked:i})},determineDriver:function(t){let e=t.types.y0;return"bar"===e?t.stacked?this.setDriver("stackedHistogram"):this.setDriver("histogram"):"area"===e?this.setDriver("area"):"pie"===e?this.setDriver("pie"):this.setDriver("line")},setDriver:function(t){if(!this._driver||this._driver.name!==t)switch(t){case"pie":this._driver=new h,this._previewDriver=new r;break;case"histogram":this._driver=new o,this._previewDriver=this._driver;break;case"stackedHistogram":this._driver=new d,this._previewDriver=this._driver;break;case"area":this._driver=new r,this._previewDriver=this._driver;break;case"line":default:this._driver=new l,this._previewDriver=this._driver}},zoomIn:function(t,e,i){if(this._isZoomed){let t=this._plot.container.querySelector(".zoom_out");s.shake(t)}else a.loadByTimestamp(this._dataId,t,(n,s)=>{n||(this._zoomIn(t,s),this._xScale=e,this._xTranslate=i)})},zoomToPie:function(t,e,i){this._isZoomed||a.loadByTimestamp(this._dataId,t,(n,s)=>{if(n)return;p.hide(),this._plot.disappear(),this._preview.disappear();let a=this._plot.graph.disabled;this.drawCheckboxes(s,a),setTimeout(()=>{this._plot.appear(),this._preview.appear(),this.setDriver("pie"),this._plot.draw(s,this._driver,{isZoomed:!0,disabled:a}),this._preview.draw(s,this._previewDriver,{disabled:a}),this._isZoomed=!0;{let e=this._plot.graph.getMinXValue(),i=this._plot.graph.getMaxXValue(),n=864e5;this._preview.update((i-e)/n,(t-e)/(t+n-t))}this._isZoomed=!0},200),this._xScale=e,this._xTranslate=i})},zoomOut:function(){this._isZoomed&&(a.load(this._dataId,(t,e)=>{if(t)return;this._plot.disappear(),this._preview.disappear();let i=this._plot.graph.disabled;4===this._dataId&&(i=[]),this.drawCheckboxes(e,i),setTimeout(()=>{this._plot.appear(),this._preview.appear(),this.determineDriver(e),this._plot.draw(e,this._driver,{isZoomed:!1,title:this._title,disabled:i}),this._preview.draw(e,this._previewDriver,{disabled:i}),this._preview.update(this._xScale,this._xTranslate),this._isZoomed=!1},200)}),p.hide())},_zoomIn:function(t,e){p.hide(),this._plot.disappear(),this._preview.disappear(),this.drawCheckboxes(e,this._plot.graph.disabled),setTimeout(()=>{let i=this._plot.graph.disabled;this._plot.appear(),this._preview.appear(),this.determineDriver(e),this._plot.draw(e,this._driver,{isZoomed:!0,disabled:i}),this._preview.draw(e,this._previewDriver,{disabled:i}),this._isZoomed=!0;{this._preview.reset();let e=this._plot.graph.getMinXValue(),i=this._plot.graph.getMaxXValue(),n=t+864e5;this._preview.update((i-e)/(n-t),(t-e)/(n-t))}},200)},_toggleGraph:function(t,e){e?(this._plot.graph.enable(t),this._preview.graph.enable(t)):(this._plot.graph.disable(t),this._preview.graph.disable(t))},_onChange:function(t,e){this._plot.update(t,e)}},t.exports=n},function(t,e,i){function n(){this.name="area"}i(0);let s=i(15),a=i(19);n.prototype={draw:function(t,e,i){let n=new a(t,e,i);return i&&i.withInteractive&&new s(n),n},clean:function(){}},t.exports=n},function(t,e,n){function s(t){r.call(this,t),this._svg=this._canvas,this._line=null,this._onClick=this._onClick.bind(this)}const a=n(0),r=n(3),h=n(1).singleton;s.prototype=Object.assign({},r.prototype,{wrap:function(t){t.addInterface("IInteractive");let e=this;t.IInteractive_select=function(n){let s,r=t.getValues(n),h=[];a.forEach(r,r=>{h.push({title:r.name,value:r.yValue,color:r.color}),n=r.x,s=r.xValue;let l=a.offsetTop(e._svg),o=n+a.offsetLeft(e._svg);e.showPopup(o,l,{xValue:s,desc:h,onClick:e._onClick.bind(e,i),isZoomed:t.state.isZoomed})}),e._xValue=s,e._showLine(n)},t.IInteractive_deselect=function(){e._hideLine(),h.hide()},t.IInteractive_click=function(){e._onClick()}},_onClick:function(){let t=document.createEvent("Event");t.initEvent("zoomToPie",!0,!0),t.data={},t.xValue=this._xValue;let e=this._graph.state;t.xScale=e.xScale,t.xTranslate=e.xTranslate,this._canvas.dispatchEvent(t)},_showLine:function(t){let e=this._line;e||(e=document.createElementNS(a.SVG_NS,"line"),this._svg.insertBefore(e,this._svg.firstChild),this._line=e),e.setAttribute("x1",t+this._graph.marginLeft),e.setAttribute("y1",this._graph.marginTop),e.setAttribute("x2",t+this._graph.marginLeft),e.setAttribute("y2",this._graph.height+this._graph.marginTop),e.style.display="block"},_hideLine:function(){let t=this._line;t&&(t.style.display="none")}}),t.exports=s},function(t){t.exports="<div class=graph_interactive> <svg></svg> </div> "},function(t){t.exports="<div class=popup> <div class=popup_content> <span class=popup_title></span> <div class=popup_description></div> </div> </div> "},function(){},function(t,e,n){function s(t,e,i){this._container=t,this._options=r.extend({},d,i),this._canvas=null,this._ctx=null,this._data=null,this._rawData=e,this._grid=i.withGrid?new l(this):null,this._interfaces=[],this._xScale=1,this._yScale=1,this._xTranslate=0,this._Y=null,this._stack=[],this._drawn=!1,this.computeData(e,this._options.disabled),this.render(),this.draw()}function a(){h.call(this),this.draw=function(t,e,i){(i||!this._drawn)&&(this._computeY(),this._drawn=!0),this.supportInterface("IInteractive")&&this.IInteractive_deselect(),this._xScale=t||this._xScale,this._xTranslate=void 0===e?this._xTranslate:e,this._ctx.clearRect(0,0,this.width,this.height),this._stack=[];let n=[];r.forIn(this._data,t=>{t.enabled&&n.push(t)}),2>n.length||(r.forEach(n,(t,e)=>{let i=n.length-1===e;this._drawArea(t,i)}),this._grid&&this.drawGrid())},this.render=function(){let t=document.createElement("div");t.innerHTML=o;let e=this._el=t.firstChild;this._container.appendChild(e),this._canvas=e.querySelector("canvas"),this._canvas.setAttribute("width",this._options.width),this._canvas.setAttribute("height",this._options.height),this._ctx=this._canvas.getContext("2d")},this.getRawData=function(t){if(null==t)return this._rawData;let e=t-3,i=t+3,n=this._rawData.columns[0];if(0>e){let t=-1*e;e+=t,i+=t}if(i>=n.length-1){let t=i-n.length-1;e+=t,i+=t}let s={columns:[],colors:{},names:{},types:{}};return(n=n.slice(e,i)).unshift("x"),s.columns.push(n),s.types.x="x",r.forEach(this._rawData.columns,t=>{let n=t[0];if("x"!==n){let a=t.slice(e,i);a.unshift(n),s.columns.push(a),s.types[n]=this._rawData.types[n],s.names[n]=this._rawData.names[n],s.colors[n]=this._rawData.colors[n]}}),s},this._drawArea=function(t,e){function n(t){let e=0;return r.forEach(this._stack,i=>{e+=this._data[i].y[t]}),e}let s=t.x,a=t.y,h=this._Y,l=t.minXValue=r.min(s),o=t.maxXValue=r.max(s),d=t.minYValue=0,c=t.maxYValue=1,u=t.xRatio=this.width/(o-l),_=t.yRatio=this.height/(c-d);for(this._ctx.beginPath(),this._ctx.fillStyle=t.color,this._ctx.strokeStyle=t.color,this._ctx.lineJoin="bevel",this._ctx.globalCompositeOperation="destination-over",i=0;i<s.length;i++){let t=n.call(this,i),r=e?t:a[i]+t,o=this.interpolateXValue(s[i],l,u),d=this.interpolateYValue(r/h[i],null,_);0===i&&this._ctx.moveTo(o,e?0:this.height),this._ctx.lineTo(o,d),i===s.length-1&&this._ctx.lineTo(o,e?0:this.height)}this._ctx.stroke(),this._ctx.fill(),this._stack.push(t.id),t.visibleMinXValue=this.interpolateX(0,l,u),t.visibleMaxXValue=this.interpolateX(this.width,l,u),t.visibleMinYValue=0,t.visibleMaxYValue=100},this.getValues=function(t){let e;for(let t in this._data)if((e=this._data[t]).enabled)break;let i=this.interpolateX(t,e.minXValue,e.xRatio),n=this.getClosestIndexByXValue(i,e.x),s=[];return r.forIn(this._data,t=>{if(t.enabled){let e=t.x,i=t.y;s.push({id:t.id,name:t.name,x:this.interpolateXValue(e[n],t.minXValue,t.xRatio),xValue:e[n],yValue:i[n],color:t.color,i:n})}}),s},this._computeY=function(){let t=[];if(r.forIn(this._data,(e,i)=>{e.enabled&&t.push(i)}),0===t.length)return void(this._Y=[]);let e=[],i=this._data[t[0]].x;for(let n,s=0,a=i.length;s<a;s++)n=0,r.forEach(t,t=>{let e=this._data[t];n+=e.y[s]}),e.push(n);this._Y=e}}const r=n(0),h=n(2),l=n(4),o=n(22),d={width:500,height:100};a.prototype=Object.create(h.prototype),s.prototype=new a,t.exports=s},function(t){t.exports="<div class=graph_grid> <svg></svg> </div> "},function(){},function(t){t.exports='<div class="graph area_graph"> <canvas></canvas> </div> '},function(t,e,i){function n(){this.name="pie"}const s=i(24);let a=i(26);n.prototype={draw:function(t,e,i){let n=new s(t,e,i);if(i&&i.withInteractive){let t=new a(n);n.interactive=t}return n}},t.exports=n},function(t,e,i){function n(t,e,i){this._container=t,this._options=a.extend({},l,i),this._svg=null,this._data=null,this._interfaces=[],this._Y=null,this.render(),this.computeData(e,this._options.disabled),this.draw()}function s(){r.call(this),this.draw=function(t,e){this._xScale=t||this._xScale,this._xTranslate=void 0===e?this._xTranslate:e,this.supportInterface("IInteractive")&&this.IInteractive_deselect(),this._clearRect();let i=this.getAnyEnabledRecord();if(!i)return;let n=i.x,s=n[0],r=a.last(n),h=this.width/(r-s);s=this.interpolateX(0,s,h),r=function(t,e,i){return e+t/(i*this._xScale)}.call(this,this.width,s,h);let l=0;for(let t=0;t<n.length;t++)if(n[t]>=s){l=t;break}let o=n.length-1;for(let t=l;t<n.length;t++)if(n[t]>=r){o=t-1;break}0>o&&(o=0),this._computeY(l,o),this._minI=l,this._maxI=o,this._amount={};let d=0;a.forIn(this._data,t=>{if(t.enabled){t.id;let e=this._drawPie(t,l,o,this._Y,{rotate:d});d+=e}}),this.interactive&&this.interactive.bindHover()},this.getVisibleMinXValue=function(){let t=this.getAnyEnabledRecord();return t?t.x[this._minI]:0},this.getMinXValue=function(){let t=this.getAnyEnabledRecord();return t?t.x[this._minI]:0},this.getMaxXValue=function(){let t=this.getAnyEnabledRecord();return t?t.x[this._maxI]:0},this.getVisibleMaxXValue=function(){let t=this.getAnyEnabledRecord();return t?t.x[this._maxI]:0},this.render=function(){let t=document.createElement("div");t.innerHTML=h;let e=this._el=t.firstChild;this._container.appendChild(e),this._svg=e.querySelector("svg"),this._svg.setAttribute("width",this._options.width),this._svg.setAttribute("height",this._options.height)},Object.defineProperty(this,"radius",{get(){return this.height/2}}),Object.defineProperty(this,"width",{get(){let t=a.width(this._svg);return delete this.width,Object.defineProperty(this,"width",{get:()=>t}),t}}),Object.defineProperty(this,"height",{get(){let t=a.height(this._svg);return delete this.height,Object.defineProperty(this,"height",{get:()=>t}),t}}),Object.defineProperty(this,"svg",{get(){return this._svg}}),this._drawPie=function(t,e,i,n,s){function r(t){return a.round(t*(Math.PI/180),3)}var h=Math.sin,l=Math.sqrt;t.x;let o=t.y,d=0;for(let t=e;t<=i;t++)d+=o[t];this._amount[t.id]=d;let c,u=this.radius,_=u,p=this.width/2,g=360*(d/n),f=180<g?360-g:g,v=r(f),x=l(2*u*u-2*u*u*Math.cos(v));90>=f?c=u*h(v):c=u*h(v=r(180-f));let w,m=l(x*x-c*c),y=0;180>=g?w=p+c:(w=p-c,y=1);let b=document.createElementNS(a.SVG_NS,"path");this._svg.appendChild(b);let I=`M${p} ${_}`;I+=` L${p} 0`,I+=` A${u} ${u} 1 ${y} 1 ${w} ${m} z`;let S=`rotate(${s.rotate} ${p} ${_})`;return b.setAttribute("d",I),b.setAttribute("transform",S),b.setAttribute("fill",t.color),b.setAttribute("path-id",t.id),g},this._computeY=function(t,e){let i=[];if(a.forIn(this._data,(t,e)=>{t.enabled&&i.push(e)}),0===i.length)return void(this._Y=0);let n=0;for(let s,r=t;r<=e;r++)s=0,a.forEach(i,t=>{let e=this._data[t];s+=e.y[r]}),n+=s;this._Y=n},this._clearRect=function(){a.erase(this._svg)},this.getValues=function(){let t=[];return a.forIn(this._data,(e,i)=>{if(e.enabled){e.x,e.y;t.push({id:e.id,name:e.name,yValue:this._amount[i],color:e.color})}}),t}}const a=i(0),r=i(2),h=i(25),l={width:500,height:100};s.prototype=Object.create(r.prototype),n.prototype=new s,t.exports=n},function(t){t.exports='<div class="graph circle_graph"> <svg></svg> </div> '},function(t,e,i){function n(t){a.call(this,t),this._svg=this._canvas}const s=i(0),a=i(3),r=i(1).singleton;n.prototype=Object.assign({},a.prototype,{wrap:function(t){let e=this;t.addInterface("IInteractive"),t.IInteractive_select=function(i,n){let a=n.target,r=s.offsetTop(a),h=a.getAttribute("path-id"),l=t.getValues(),o=[];s.forEach(l,t=>{h!==t.id||o.push({title:t.name,value:t.yValue,color:t.color})}),e.showPopup(i,r,{desc:o,isZoomed:t.state.isZoomed})},t.IInteractive_deselect=function(){e.hidePopup()}},bindHover:function(){if(!this._graph.supportInterface("IInteractive"))throw new Error("Graph should support IInteractive");let t=this._graph.svg.querySelectorAll("path");s.forEach(t,t=>{this._bindHover(t)})},_bindHover:function(t){if(!this._graph.supportInterface("IInteractive"))throw new Error("Graph should support IInteractive");t.addEventListener("mousemove",e=>{if(e.target===t){let t=e.clientX-this._graph.marginLeft;0>t||this._graph.IInteractive_select(t,e)}}),t.addEventListener("mouseleave",t=>{t.relatedTarget===r.el||s.isChild(t.relatedTarget,r.el)||this._graph.IInteractive_deselect()})},render:function(){this._canvas=this._graph.svg}}),t.exports=n},function(t,e,i){function n(){this.name="line"}let s=i(28),a=i(30);n.prototype={draw:function(t,e,i){let n=new s(t,e,i);return i&&i.withInteractive&&new a(n),n}},t.exports=n},function(t,e,n){function s(t,e,i){this._container=t,this._options=l.extend({},u,i),this._canvas=null,this._el=null,this._ctx=null,this._data={},this._grid=i.withGrid?new d(this):null,this._interfaces=[],this._xScale=1,this._yScale=1,this._xTranslate=0,this._Y=null,this._drawn=!1,this._xValueStep=null,this.computeData(e,this._options.disabled),this.render(),this.draw()}function a(){c.call(this),this.draw=function(t,e,i){(i||!this._drawn)&&(this._computeY(),this._drawn=!0),this.supportInterface("IInteractive")&&this.IInteractive_deselect(),this._xScale=t||this._xScale,this._xTranslate=void 0===e?this._xTranslate:e,this._ctx.clearRect(0,0,this.width,this.height),l.forIn(this._data,t=>{t.enabled&&this._drawLine(t)}),this._grid&&this.drawGrid()},this.drawGrid=function(){if(this._grid)if(this._options.dualY){let t=[],e=[],i=[],n=0;if(l.forIn(this._data,s=>{if(s.enabled){n++;let a=[];a.push(s.visibleMinXValue),a.push(s.visibleMinYValue),t.push(a);let r=[];r.push(s.visibleMaxXValue),r.push(s.visibleMaxYValue),e.push(r),i.push(s.color)}}),!n)return;this._grid.drawDualY(t,e,i)}else{let t=h,e=r,i=h,n=r,s=0;if(l.forIn(this._data,a=>{a.enabled&&(s++,t=l.min(a.visibleMinXValue,t),e=l.max(a.visibleMaxXValue,t),i=l.min(a.visibleMinYValue,i),n=l.max(a.visibleMaxYValue,n))}),!s)return;this._grid.draw(t,e,i,n)}},this.getPoints=function(t){let e=[];return l.forIn(this._data,({enabled:i},n)=>{i&&e.push(this._getPoint(n,t))}),e},this.render=function(){let t=document.createElement("div");t.innerHTML=o;let e=this._el=t.firstChild;this._container.appendChild(e),this._canvas=e.querySelector("canvas"),this._canvas.setAttribute("width",this._options.width),this._canvas.setAttribute("height",this._options.height),this._ctx=this._canvas.getContext("2d")},this._computeY=function(){let t=[];if(l.forIn(this._data,(e,i)=>{e.enabled&&t.push(i)}),0===t.length)return void(this._Y=[]);let e=[],i=this._data[t[0]].x;for(let n,s=0,a=i.length;s<a;s++)n=0,l.forEach(t,t=>{let e=this._data[t];n=l.max(e.y[s],n)}),e.push(n);let n=i[1]-i[0];this._xValueStep=n,this._Y=e},this._getPoint=function(t,e){let i=this._data[t],n=i.x,s=i.y,a=this.interpolateX(e,i.minXValue,i.xRatio),r=this.getClosestIndexByXValue(a,i.x);return{id:t,name:i.name,x:this.interpolateXValue(n[r],i.minXValue,i.xRatio),y:this.interpolateYValue(s[r],i.minYValue,i.yRatio),xValue:n[r],yValue:s[r],color:i.color,i:r}},this._drawLine=function(t){let e=t.x,n=t.y,s=this._Y,a=t.minXValue=e[0],r=t.maxXValue=l.last(e),h=t.xRatio=this.width/(r-a);if(this._options.dualY?s=t.y:this._options.scaleY&&(s=this._Y),this._options.scaleY){let e=this.interpolateX(0,t.minXValue,t.xRatio),i=this.interpolateX(this.width,t.minXValue,t.xRatio),n=this.getClosestIndexByXValue(e,t.x),a=this.getClosestIndexByXValue(i,t.x);s=s.slice(n,a)}let o=t.minYValue=0,d=t.maxYValue=l.max(s),c=t.yRatio=this.height/(d-o);for(this._ctx.beginPath(),this._ctx.strokeStyle=t.color,this._ctx.lineWidth=this._getLineWidth(),this._ctx.lineJoin="bevel",i=0;i<e.length;i++){let t=this.interpolateXValue(e[i],a,h),s=this.interpolateYValue(n[i],o,c);0==i?this._ctx.moveTo(t,s):this._ctx.lineTo(t,s)}this._ctx.stroke(),t.visibleMinXValue=this.interpolateX(0,a,h),t.visibleMaxXValue=this.interpolateX(this.width,a,h),t.visibleMinYValue=this.interpolateY(this.height,o,c),t.visibleMaxYValue=this.interpolateY(0,o,c)},this._getLineWidth=function(){return 1*l.dpr},Object.defineProperty(this,"xValueStep",{get(){return this._xValueStep}})}var r=Number.NEGATIVE_INFINITY,h=Number.POSITIVE_INFINITY;const l=n(0),o=n(29),d=n(4),c=n(2),u={width:500,height:100};a.prototype=Object.create(c.prototype),s.prototype=new a,t.exports=s},function(t){t.exports='<div class="graph line_graph"> <canvas></canvas> </div> '},function(t,e,i){function n(t){a.call(this,t),this._points={},this._svg=this._canvas,this._line=null,this._xValue=null,this._onClick=this._onClick.bind(this)}const s=i(0);i(31);const a=i(3),r=i(32);i(1).singleton,n.prototype=Object.assign({},a.prototype,r,{wrap:function(t){t.addInterface("IInteractive");let e=this;t.IInteractive_select=function(i){let n=this.getPoints(i);if(!n.length)return;let a,r=[];n.forEach(t=>{e._showPoint(t),a=t.xValue,i=t.x,r.push({title:t.name,value:t.yValue,color:t.color})}),e._xValue=a,e._showLine(i);let h=s.offsetTop(e._svg);i+=s.offsetLeft(e._svg),e.showPopup(i,h,{xValue:a,desc:r,onClick:e._onClick,isZoomed:t.state.isZoomed,xValueStep:t.xValueStep})},t.IInteractive_deselect=function(){e._hideLine(),e._hidePoints(),e.hidePopup(),e.unbindKeyboard(),e._xValue=null},t.IInteractive_click=function(){e._onClick()}},_onClick:function(){let t=document.createEvent("Event");t.initEvent("zoom",!0,!0),t.xValue=this._xValue,t.xTranslate=this._graph.state.xTranslate,t.xScale=this._graph.state.xScale,this._svg.dispatchEvent(t)},_showLine:function(t){let e=this._line;e||(e=document.createElementNS(s.SVG_NS,"line"),this._svg.insertBefore(e,this._svg.firstChild),this._line=e),e.setAttribute("x1",t+this._graph.marginLeft),e.setAttribute("y1",this._graph.marginTop),e.setAttribute("x2",t+this._graph.marginLeft),e.setAttribute("y2",this._graph.height+this._graph.marginTop),e.style.display="block"},_showPoint:function(t){let e=this._points[t.name];e||(e=document.createElementNS(s.SVG_NS,"circle"),this._svg.appendChild(e),this._points[t.name]=e),e.setAttribute("cx",this._graph.marginLeft+t.x),e.setAttribute("cy",this._graph.marginTop+t.y),e.setAttribute("stroke",t.color),e.setAttribute("stroke-width",1*s.dpr),e.setAttribute("r",4*s.dpr),e.style.display="block"},_hideLine:function(){let t=this._line;t&&(t.style.display="none")},_hidePoints:function(){s.forIn(this._points,t=>{t.style.display="none"})}}),t.exports=n},function(){},function(t){t.exports={bindKeyboard:function(){this.__keyboardIsBinded||(this.__keyboardIsBinded=!0,window.addEventListener("keydown",this.__keyDown))},unbindKeyboard:function(){this.__keyboardIsBinded=!1,window.removeEventListener("keydown",this.__keyDown)},__keyDown:function(t){switch(t.keyCode){case 37:this._graph.selectPrev(this._x);break;case 39:this._graph.selectNext(this._x)}}}},function(t,e,i){function n(){this.name="histogram"}const s=i(7);let a=i(8);n.prototype={draw:function(t,e,i){let n=new s(t,e,i);return i&&i.withInteractive&&new a(n),n}},t.exports=n},function(t){t.exports='<div class="graph histogram_graph"> <canvas></canvas> </div> '},function(){},function(t){t.exports='<div class="histogram_graph_interactive graph_interactive"></div> '},function(){},function(t,e,i){function n(){this.name="stackedHistogram"}const s=i(39);let a=i(8);n.prototype={draw:function(t,e,i){let n=new s(t,e,i);return i&&i.withInteractive&&new a(n),n}},t.exports=n},function(t,e,i){function n(t,e,i){this._container=t,this._options=a.extend({},d,i),this._canvas=null,this._el=null,this._ctx=null,this._data=null,this._grid=i.withGrid?new o(this):null,this._interfaces=[],this._xScale=1,this._yScale=1,this._xTranslate=0,this._Y=null,this._stack=[],this._drawn=!1,this.computeData(e,this._options.disabled),this.render(),this.draw()}function s(){h.call(this),this.draw=function(t,e,i,n){(i||!this._drawn)&&(this._computeY(),this._drawn=!0),this._xScale=t||this._xScale,this._xTranslate=void 0===e?this._xTranslate:e,this._ctx.clearRect(0,0,this.width,this.height),this._stack=[],a.forIn(this._data,t=>{t.enabled&&this._drawBar(t,n)}),this._grid&&this.drawGrid()},this.select=function(t){this.draw(this._xScale,this._xTranslate,!1,t)},this.deselect=function(){this.draw(this._xScale,this._xTranslate)},this.render=function(){let t=document.createElement("div");t.innerHTML=r;let e=this._el=t.firstChild;this._container.appendChild(e),this._canvas=e.querySelector("canvas"),this._canvas.setAttribute("width",this._options.width),this._canvas.setAttribute("height",this._options.height),this._ctx=this._canvas.getContext("2d")},this._drawBar=function(t,e){function i(t){let e=0;return a.forEach(this._stack,i=>{e+=this._data[i].y[t]}),e}let n=t.x,s=t.y,r=this._Y,h=t.minXValue=n[0],l=t.maxXValue=a.last(n),o=t.xRatio=this.width/(l-h);if(this._options.scaleY){let e=this.interpolateX(0,t.minXValue,t.xRatio),i=this.interpolateX(this.width,t.minXValue,t.xRatio),n=this.getClosestIndexByXValue(e,t.x),s=this.getClosestIndexByXValue(i,t.x);r=r.slice(n,s)}let d=t.minYValue=0,c=t.maxYValue=a.max(r),u=t.yRatio=this.height/(c-d),_=this.width/n.length*this._xScale;if(this._ctx.fillStyle=t.color,e){this._ctx.globalAlpha=.5;let a=this.interpolateX(e,t.minXValue,t.xRatio),r=this.getClosestIndexByXValue(a,t.x);for(let t=0,e=n.length;t<e;t++){let a=i.call(this,t),l=this.interpolateYValue(a,null,u),d=this.interpolateXValue(n[t],h,o),c=this.interpolateYValue(a+s[t],null,u),p=t<e-1?this.interpolateXValue(n[t+1],h,o):_+d;this._ctx.globalAlpha=t===r?1:.5,this._ctx.fillRect(d,c,p-d,l-c)}}else{this._ctx.globalAlpha=1;for(let t=0,e=n.length;t<e;t++){let a=i.call(this,t),r=this.interpolateYValue(a,null,u),l=this.interpolateXValue(n[t],h,o),d=this.interpolateYValue(a+s[t],null,u),c=t<e-1?this.interpolateXValue(n[t+1],h,o):_+l;this._ctx.fillRect(l,d,c-l,r-d)}}this._stack.push(t.id),t.visibleMinXValue=this.interpolateX(0,h,o),t.visibleMaxXValue=this.interpolateX(this.width,h,o),t.visibleMinYValue=this.interpolateY(this.height,d,u),t.visibleMaxYValue=this.interpolateY(0,d,u)},this._computeY=function(){let t=[];if(a.forIn(this._data,(e,i)=>{e.enabled&&t.push(i)}),0===t.length)return void(this._Y=[]);let e=[],i=this._data[t[0]].x;for(let n,s=0,r=i.length;s<r;s++)n=0,a.forEach(t,t=>{let e=this._data[t];n+=e.y[s]}),e.push(n);this._Y=e}}const a=i(0),r=i(40),h=i(2),l=i(7),o=i(4),d={width:500,height:100};s.prototype=Object.create(l.prototype),n.prototype=new s,t.exports=n},function(t){t.exports='<div class="graph stacked_histogram_graph"> <canvas></canvas> </div> '},function(t,e,i){function n(t){let e=document.createElement("div");e.innerHTML=s;let i=this._el=e.firstChild;t.appendChild(i),this._container=i,i.querySelector(".zoom_out").addEventListener("click",t=>{t.stopPropagation(),t.preventDefault();let e=document.createEvent("Event");e.initEvent("zoomout",!0,!0),i.dispatchEvent(e)})}const s=i(42),a=i(0),r=i(5);i(43);let h=a.requestWidth();n.prototype={draw:function(t,e,i){let n=!!t.y_scaled;this.clean(),i&&i.isZoomed?a.addClass(this._el,"is_zoomed"):(a.removeClass(this._el,"is_zoomed"),this.setTitle(i&&i.title)),this._graph=e.draw(this._container.querySelector(".plot_internal"),t,{width:h-10,height:.7*h,withGrid:!0,withInteractive:!0,scaleY:!0,dualY:n,disabled:i&&i.disabled,isZoomed:!(!i||!i.isZoomed)})},appear:function(){a.removeClass(this._container,"disappear")},disappear:function(){a.addClass(this._container,"disappear")},clean:function(){let t=this._container.querySelector(".plot_internal");a.erase(t)},reset:function(){this._slider.reset()},update:function(t,e){this._graph.draw(t,e);let i=this._graph.getVisibleMinXValue(),n=this._graph.getVisibleMaxXValue(),s=new Date(i),a=new Date(n);if(a-s<=11232e4){let t=`${(s=new Date((n+i)/2)).getUTCDate()} ${r.getMonth(s)} ${s.getUTCFullYear()}`;this.setDescription(`${t}`)}else{let t=`${s.getUTCDate()} ${r.getMonth(s)} ${s.getUTCFullYear()}`,e=`${a.getUTCDate()} ${r.getMonth(a)} ${a.getUTCFullYear()}`;this.setDescription(`${t} - ${e}`)}},setTitle:function(t){this._container.querySelector(".plot_title").innerHTML=t||""},setDescription:function(t){this._container.querySelector(".plot_range").innerHTML=t||""},get container(){return this._container},get graph(){return this._graph}},t.exports=n},function(t){t.exports='<div class=plot> <p class=plot_heading> <a href=# class=zoom_out> <span class=icon> <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 512 512"><path d="M304 192v32c0 6.6-5.4 12-12 12H124c-6.6 0-12-5.4-12-12v-32c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm201 284.7L476.7 505c-9.4 9.4-24.6 9.4-33.9 0L343 405.3c-4.5-4.5-7-10.6-7-17V372c-35.3 27.6-79.7 44-128 44C93.1 416 0 322.9 0 208S93.1 0 208 0s208 93.1 208 208c0 48.3-16.4 92.7-44 128h16.3c6.4 0 12.5 2.5 17 7l99.7 99.7c9.3 9.4 9.3 24.6 0 34zM344 208c0-75.2-60.8-136-136-136S72 132.8 72 208s60.8 136 136 136 136-60.8 136-136z"/></svg> </span> <span>Zoom Out<span> </span></span></a> <span class=plot_title></span> <span class=plot_range></span> </p> <div class=plot_internal></div> </div> '},function(){},function(t,e,i){function n(t,e){this._container=t,this.render(),this._slider=new r(this._el,e),this._graph=null}const s=i(0),a=i(9),r=i(45),h=i(46);i(10),n.prototype={draw:function(t,e,i){let n=this._el.querySelector(".canvas"),s=getComputedStyle(this._el.parentNode);this.clean();let r=!!t.y_scaled;this._graph=e.draw(n,t,{width:parseFloat(s.width)-a.SLIDER_LEFT_WIDTH-a.SLIDER_RIGHT_WIDTH,height:a.CANVAS_HEIGHT,dualY:r,disabled:i&&i.disabled})},appear:function(){s.removeClass(this._el,"disappear")},disappear:function(){s.addClass(this._el,"disappear")},update(t,e){this._slider.posByScale(t,e)},reset:function(){this._slider.reset()},clean:function(){let t=this._el.querySelector(".canvas");s.erase(t)},get width(){return this._el.getBoundingClientRect().width},get height(){return this._el.getBoundingClientRect().height},get graph(){return this._graph},render:function(){let t=document.createElement("div");t.innerHTML=h,this._el=t.firstChild,this._container.appendChild(this._el);let e=s.requestWidth();this._el.style.width=`${e}px`,this._el.style.height=`${a.PREVIEW_HEIGHT-2*a.SLIDER_BORDER}px`;let i=this._el.querySelector(".canvas");i.style.marginLeft=`${a.SLIDER_LEFT_WIDTH}px`,i.style.marginRight=`${a.SLIDER_RIGHT_WIDTH}px`,i.style.width=`${e-a.SLIDER_LEFT_WIDTH-a.SLIDER_RIGHT_WIDTH}px`,i.style.height=`${a.CANVAS_HEIGHT}px`}},t.exports=n},function(t,e,i){function n(t,e){let i=t.querySelector(r.SLIDER);this._el=i,this._el.style.width=t.getBoundingClientRect().width,this.sliderUI={left:i.querySelector(r.LEFT),right:i.querySelector(r.RIGHT),view:i.querySelector(r.VIEW)},this.overlayUI={left:i.querySelector(r.OVERLAY_LEFT),right:i.querySelector(r.OVERLAY_RIGHT)},this.onChange=e.onChange,this.config=s.extend({},h,e),this.render(),this._initUI()}let s=i(0),a=i(9);i(10);const r={SLIDER:".slider",LEFT:".slider_left",RIGHT:".slider_right",VIEW:".slider_view",OVERLAY_LEFT:".overlay_left",OVERLAY_RIGHT:".overlay_right"},h={sliderWidth:100*s.dpr,sliderMinWidth:20*s.dpr,onChange:null};n.prototype={pos:function(t,e){0>t&&(t=0),e<this.config.sliderMinWidth&&(e=this.config.sliderMinWidth);const{left:i,right:n,view:s}=this.sliderUI;s.style.width=`${e}px`,t<a.SLIDER_LEFT_WIDTH&&(t=a.SLIDER_LEFT_WIDTH),this.overlayUI.left.style.width=`${t}px`;i.getBoundingClientRect().width;let r=this.width-e-t;this.overlayUI.right.style.width=`${r}px`,this._onChange()},posByScale:function(t,e){let{left:i,right:n,view:a}=this.sliderUI,r=s.width(i),h=s.width(n),l=this.width-r-h,o=l/t;o>=l&&(o=l);let d=s.round(e*o+r);this.pos(d,s.round(o))},reset:function(){this.pos(0,this.config.sliderWidth)},_initUI:function(){this._el.style.display="block",this.pos(0,this.config.sliderWidth),this._bindUI()},getXScale(){let{left:t,right:e,view:i}=this.sliderUI,n=s.width(i),a=s.width(t),r=s.width(e);return(this.width-a-r)/n},getXTranslate(){let{left:t,view:e}=this.sliderUI,i=s.width(e),n=s.width(t);return(e.offsetLeft-n)/i},getVisibleCoords(){let{left:t,view:e}=this.sliderUI,i=e.getBoundingClientRect().width,n=t.getBoundingClientRect().width,s=e.offsetLeft;return[s-n,s+i]},_onChange(){this.onChange&&this.onChange(this.getXScale(),this.getXTranslate())},_bindUI:function(){const t=this.config,{left:e,right:i,view:n}=this.sliderUI,s=(this.width,a.SLIDER_LEFT_WIDTH),r=a.SLIDER_RIGHT_WIDTH;let h=this._el.getBoundingClientRect().left;this._bindSlider(e,e=>{let i=e.clientX-s-h;if(e.changedTouches){i=e.changedTouches[0].clientX-s-h}0>i&&(i=0);let a=i+s,r=this.overlayUI.left.getBoundingClientRect().width-a,l=n.getBoundingClientRect().width+r;l<=t.sliderMinWidth&&(a+=l-t.sliderMinWidth,l=t.sliderMinWidth),this.overlayUI.left.style.width=`${a}px`,n.style.width=`${l}px`,this._onChange()}),this._bindSlider(i,e=>{let i=e.movementX,a=n.getBoundingClientRect().width;if(e.changedTouches){let t=e.changedTouches[0],n=this.overlayUI.left.getBoundingClientRect().width;i=t.clientX-s-a-n-h}let l=a+i;l<t.sliderMinWidth&&(l=a+(i=t.sliderMinWidth-a));let o=this.overlayUI.right.getBoundingClientRect().width-i;o<r&&(l+=o-r,o=r),this.overlayUI.right.style.width=`${o}px`,n.style.width=`${l}px`,this._onChange()}),this._bindSlider(n,t=>{let e=t.movementX;if(t.changedTouches){let i=t.changedTouches[0];if(!this._sliderClientX)return void(this._sliderClientX=i.clientX);e=i.clientX-this._sliderClientX,this._sliderClientX=i.clientX}let i=this.overlayUI.left.getBoundingClientRect().width+e;i<s&&(e+=s-i,i=s);let n=this.overlayUI.right.getBoundingClientRect().width-e;n<r&&(e-=r-n,n=r,i=this.overlayUI.left.getBoundingClientRect().width+e),this.overlayUI.left.style.width=`${i}px`,this.overlayUI.right.style.width=`${n}px`,this._onChange()})},_bindSlider(t,e){function i(){s.addClass(r._el,"grabbing"),h.addEventListener("mouseup",n),h.addEventListener("touchend",n),r._el.addEventListener("mousemove",a),r._el.addEventListener("touchmove",a,!!l&&{passive:!0})}function n(){s.removeClass(r._el,"grabbing"),r._el.removeEventListener("mousemove",a),r._el.removeEventListener("touchmove",a,!!l&&{passive:!0}),r._sliderClientX=null,h.removeEventListener("mouseup",n),h.removeEventListener("touchend",n)}function a(t){e(t)}let r=this;const h=t.ownerDocument;let l=!1;try{let t=Object.defineProperty({},"passive",{get:function(){l=!0}});window.addEventListener("testPassive",null,t),window.removeEventListener("testPassive",null,t)}catch(e){}t.addEventListener("mousedown",i),t.addEventListener("touchstart",i,!!l&&{passive:!0})},get width(){return s.width(this._el)},get height(){return s.height(this._el)},render:function(){this._el.style.height=`${a.CANVAS_HEIGHT}px`;let{left:t,right:e,view:i}=this.sliderUI;t.style.width=`${a.SLIDER_LEFT_WIDTH}px`,t.style.height=`${a.SLIDER_HEIGHT-a.SLIDER_BORDER}px`,t.style.marginTop=`-${a.SLIDER_BORDER}px`,e.style.width=`${a.SLIDER_RIGHT_WIDTH}px`,e.style.height=`${a.SLIDER_HEIGHT-a.SLIDER_BORDER}px`,e.style.marginTop=`-${a.SLIDER_BORDER}px`,i.style.height=`${a.SLIDER_HEIGHT-a.SLIDER_BORDER}px`,i.style.marginTop=`-${a.SLIDER_BORDER}px`,i.style.borderTopWidth=`${a.SLIDER_BORDER}px`,i.style.borderBottomWidth=`${a.SLIDER_BORDER}px`,this.overlayUI.left.style.height=`${a.CANVAS_HEIGHT}px`,this.overlayUI.right.style.height=`${a.CANVAS_HEIGHT}px`}},t.exports=n},function(t){t.exports='<div class=preview> <div class=canvas></div> <div class=slider> <div class="overlay overlay_left"> <div class=slider_left><span></span></div> </div> <div class=slider_view> </div> <div class="overlay overlay_right"> <div class=slider_right><span></span></div> </div> </div> </div> '},function(t,e,i){function n(t){this._container=t,this._checked=0,this._options={minChecked:1},this._el=null,this.render()}const s=i(0),a=i(48);n.prototype={draw:function(t,e){s.erase(this._el),this._checked=0,s.extend(this._options,e);let i=e&&e.disabled;s.forIn(t.types,(e,n)=>{if("x"==n)return;let s=!0;i&&-1!==i.indexOf(n)&&(s=!1),s&&this._checked++,new a(this._el,{checked:s,id:n,label:t.names[n],color:t.colors[n],onChange:this._onChange.bind(this,n)})})},_onChange:function(t,e){e?this._checked++:this._checked--,this._options.onChange(t,e)},render:function(){let t=document.createElement("div");this._container.appendChild(t),this._el=t,this._el.addEventListener("click",t=>{let e=t.target,i=this._getCheckboxNode(e);return i&&"true"===i.getAttribute("checked")&&this._checked===this._options.minChecked?(s.shake(i),void t.stopPropagation()):void 0},!0)},_getCheckboxNode:function(t){for(;t&&t!=this._el;){if(s.hasClass(t,"custom_checkbox"))return t;t=t.parentNode}return null}},t.exports=n},function(t,e,i){function n(t,e){this._container=t,this._el=this._init(),this._options=a.extend({},r,e),this._input=this._el.querySelector('input[type="checkbox"]'),this._label=this._el.querySelector("label");let i=Math.ceil(100*Math.random()),n=this._options.id;this._input.setAttribute("id",`${n}-checkbox-${i}`),this._label.innerHTML=this._options.label,this._label.setAttribute("for",`${n}-checkbox-${i}`),this._input.checked=!!e.checked,this._el.setAttribute("checked",!!e.checked),a.addClass(this._el,"active"),this._el.addEventListener("click",t=>{t.preventDefault(),t.stopPropagation(),this.toggle()}),this._input.checked?(a.addClass(this._el,"checked"),this._el.style.background=this._options.color,this._el.style.color="white"):(a.removeClass(this._el,"checked"),this._el.style.color=this._options.color,this._el.style.background="none"),this._el.style.borderColor=this._options.color}const s=i(49),a=i(0);i(50);const r={label:null,onChange:function(){},checked:!1};n.prototype={toggle:function(){this._input.checked=!this._input.checked,this._el.setAttribute("checked",this._input.checked),this._input.checked?(a.addClass(this._el,"checked"),this._el.style.color="white",this._el.style.background=this._options.color):(a.removeClass(this._el,"checked"),this._el.style.color=this._options.color,this._el.style.background="none"),this._options.onChange(this._input.checked)},_init:function(){let t=document.createElement("div");t.innerHTML=s;let e=t.firstChild;return this._container.appendChild(e),e}},t.exports=n},function(t){t.exports='<span class=custom_checkbox> <input type=checkbox /> <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg> <label></label> </span> '},function(){}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "/";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports) {
+
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ];
+
+const MAX_WIDTH = 500;
+
+const utils = {
+  min: function (val) {
+    if (Array.isArray(val)) return Math.min.apply(null, val);
+    return Math.min.apply(null, arguments);
+  },
+
+  max: function (val) {
+    if (Array.isArray(val)) return Math.max.apply(null, val);
+    return Math.max.apply(null, arguments);
+  },
+
+  getWidth: function (el) {
+    return el.getBoundingClientRect().width;
+  },
+
+  getHeight: function (el) {
+    return el.getBoundingClientRect().height;
+  },
+
+  width: function (el) {
+    return el.getBoundingClientRect().width;
+  },
+
+  height: function (el) {
+    return el.getBoundingClientRect().height;
+  },
+
+  extend: function () {
+    return Object.assign.apply(null, arguments);
+  },
+
+  last: function (arr) {
+    if (!Array.isArray(arr)) return null;
+    return arr[arr.length - 1];
+  },
+
+  forIn: function (obj, cb) {
+    if (!cb) return;
+
+    for (let k in obj) {
+      cb(obj[k], k);
+    }
+  },
+
+  forEach: function (arr, cb) {
+    if (!cb || !arr) return;
+
+    for (let i = 0, length = arr.length; i < length; i++) {
+      cb(arr[i], i);
+    }
+  },
+
+  round: function (val, precision) {
+    precision = precision || 0;
+    let mult = Math.pow(10, precision);
+    return Math.round(val * mult) / mult;
+  },
+
+  get SVG_NS() {
+    return 'http://www.w3.org/2000/svg';
+  },
+
+  erase: function (node) {
+    while (node.childNodes.length) {
+      node.removeChild(node.firstChild);
+    }
+  },
+
+  // requires classList support
+  addClass: function (node, className) {
+    node.classList.add(className);
+  },
+
+  // requires classList support
+  removeClass: function (node, className) {
+    node.classList.remove(className);
+  },
+
+  hasClass: function (node, className) {
+    return node.classList.contains(className);
+  },
+
+  offsetTop: function (node) {
+    let rect = node.getBoundingClientRect();
+    let t = rect.top;
+    let x = t + (pageYOffset || document.documentElement.scrollTop);
+    return x;
+  },
+
+  offsetLeft: function (node) {
+    let rect = node.getBoundingClientRect();
+    let l = rect.left;
+    let x = l + (pageXOffset || document.documentElement.scrollLeft);
+    return x;
+  },
+
+  isChild: function (a, b) {
+    while (a && a !== document.documentElement) {
+      a = a.parentNode;
+
+      if (a === b)
+        return true;
+    }
+
+    return false;
+  },
+
+  requestWidth: function () {
+    let _ = utils;
+
+    let width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    if (width > MAX_WIDTH * _.dpr) width = MAX_WIDTH * _.dpr;
+    return width;
+  },
+
+  get dpr() {
+    return 1;
+  },
+
+  get yRatio() {
+    MAX_WIDTH / screen.width;
+  },
+
+  get hRatio() {
+    MAX_HEIGHT / screen.height;
+  },
+
+  shake(node) {
+    const _ = utils;
+    const SHAKE_MS = 820;
+    if (_.hasClass(node, 'shaked')) return;
+
+    _.addClass(node, 'shaked');
+    setTimeout(() => {
+      _.removeClass(node, 'shaked')
+    }, SHAKE_MS)
+  }
+}
+
+module.exports = utils
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const html = __webpack_require__(17);
+const _ = __webpack_require__(0);
+__webpack_require__(18);
+
+const yPadding = 30;
+const SHIFT = 10;
+
+function Popup () {
+  this._container = document.body;
+  this._el = this._init();
+
+  this._el.addEventListener('click', (e) => {
+    e.preventDefault();
+    this._onClick && this._onClick();
+  });
+}
+
+Popup.prototype = {
+  show: function (atX, atY) {
+    let el = this._el;
+
+    let y = atY
+    let x = this._findBestX(atX);
+
+    this._el.style.left = `${x}px`;
+    this._el.style.top = `${y}px`;
+    this._el.style.display = 'block';
+    //TODO;
+    this._w = _.width(this._el);
+  },
+
+  hide: function () {
+    this._el.style.display = 'none';
+  },
+
+  setTitle: function (title, onClick) {
+    this._el.querySelector('.popup_title').innerHTML = title || '';
+  },
+
+  showTitle: function () {
+    if (!this._titleIsHidden) return;
+    this._el.querySelector('.popup_title').style.display = 'block';
+    this._titleIsHidden = false;
+  },
+
+  hideTitle: function () {
+    if (this._titleIsHidden) return;
+    this._el.querySelector('.popup_title').style.display = 'none';
+    this._titleIsHidden = true;
+  },
+
+  setOnClick: function (onClick) {
+    this._onClick = onClick;
+  },
+
+  _findBestX: function (atX) {
+    let el = this._el;
+    let w = this.width;
+    let maxW = el.parentNode.getBoundingClientRect().width;
+    let x1 = atX - w - SHIFT;
+    if (x1 < 0) {
+      let diff1 = x1 * 1
+      let x2 = atX + SHIFT * 2;
+      if (x2 + w < maxW) return x2;
+      let diff2 = x2 + w - maxW;
+
+      console.log(diff2, diff1);
+      return (diff2 > diff1) ? 0 : maxW - w;
+    }
+
+    return x1;
+  },
+  /**
+   * @param {Array} desc
+   *  @item {Object}
+   *   @key {String} title
+   *   @key {String} color
+   *   @key {String} value
+   */
+  setDescription: function (desc) {
+    let node = this._el.querySelector('.popup_description');
+    _.erase(node);
+
+    _.forEach(desc, d => {
+      let row = document.createElement('div');
+      let title = document.createElement('span');
+      let v = document.createElement('span');
+
+      row.appendChild(title);
+      title.innerHTML = d.title;
+      row.appendChild(v);
+      v.innerHTML = this._formatValue(d.value);
+      v.style.color = d.color;
+      node.appendChild(row);
+    })
+  },
+
+  _formatValue: function (value) {
+    if (!value) return 0;
+    let v = [];
+    while (value) {
+      let q = value % 1000;
+      value = Math.floor(value / 1000)
+      if (value) {
+        q = `${q}`;
+        if (q.length == 2) {
+          q = `0${q}`;
+        } else if (q.length == 1) {
+          q = `00${q}`;
+        }
+      }
+      v.unshift(q);
+    }
+
+    return v.join(' ');
+  },
+
+  get el() {
+    return this._el;
+  },
+
+  get width() {
+    return this._w || 100;
+  },
+
+  // TODO: rename
+  _init: function () {
+    let doc = document.createElement('div');
+    doc.innerHTML = html;
+    let el = doc.firstChild;
+    this._container.appendChild(el);
+    return el;
+  },
+}
+
+module.exports = {
+  Popup: Popup,
+  singleton: new Popup()
+}
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0)
+
+function Graph() {
+  this._data = null; // required
+  this._container = null; // required
+  this._el = null; // required;
+  this._options = null;
+  this._grid = null;
+
+  this._interfaces = [];
+}
+
+Graph.prototype = {
+  drawGrid: function () {
+    if (!this._grid) return;
+
+    let minXValue = Number.POSITIVE_INFINITY;
+    let maxXValue = Number.NEGATIVE_INFINITY;
+    let minYValue = Number.POSITIVE_INFINITY;
+    let maxYValue = Number.NEGATIVE_INFINITY;
+
+    _.forIn(this._data, record => {
+      if (!record.enabled) return;
+      minXValue = _.min(record.visibleMinXValue, minXValue);
+      maxXValue = _.max(record.visibleMaxXValue, maxXValue);
+      minYValue = _.min(record.visibleMinYValue, minYValue);
+      maxYValue = _.max(record.visibleMaxYValue, maxYValue);
+    });
+
+    this._grid.draw(minXValue, maxXValue, minYValue, maxYValue);
+  },
+
+  // TODO: move out to data provider
+  // TODO: rename
+  computeData: function (data, disabled) {
+    this._data = {};
+
+    _.forIn(data.types, (v, id) => {
+      if (v === 'x') return;
+
+      let enabled = true;
+      if (disabled) {
+        enabled = disabled.indexOf(id) === -1;
+      }
+      this._data[id] = {
+        id: id,
+        enabled: enabled
+      };
+    })
+
+    let x = data.columns[0].slice(1);
+
+    _.forEach(data.columns, column => {
+      if (column[0] === 'x') return;
+
+      let id = column[0]
+      let record = this._data[id];
+      record.x = x;
+      record.y = column.slice(1);
+      record.color = data.colors[id];
+      record.name = data.names[id];
+    });
+  },
+
+  enable: function (id) {
+    let data = this._data[id];
+    if (!data || data.enabled)
+      return;
+
+    data.enabled = true;
+    this.draw(this._xScale, this._xTranslate, true);
+  },
+
+  disable: function (name) {
+    let data = this._data[name];
+    if (!data || !data.enabled)
+      return;
+
+    data.enabled = false;
+    this.draw(this._xScale, this._xTranslate, true);
+  },
+
+  getAnyEnabledRecord: function () {
+    for (let k in this._data) {
+      if (this._data[k].enabled) return this._data[k];
+    }
+
+    return null;
+  },
+
+  getVisibleMinXValue: function () {
+    let visibleMinXValue;
+    _.forIn(this._data, (record, id) => {
+      if (!record.enabled) return;
+
+      visibleMinXValue = record.visibleMinXValue;
+    })
+    return visibleMinXValue;
+  },
+
+  getVisibleMaxXValue: function () {
+    let visibleMaxXValue;
+    _.forIn(this._data, (record, id) => {
+      if (!record.enabled) return;
+
+      visibleMaxXValue = record.visibleMaxXValue;
+    })
+
+    return visibleMaxXValue;
+  },
+
+  getValues: function (xPoint) {
+    let record;
+    for (let k in this._data) {
+      record = this._data[k];
+      if (record.enabled) break;
+    }
+    let xValue = this.interpolateX(xPoint, record.minXValue, record.xRatio);
+    let i = this.getClosestIndexByXValue(xValue, record.x);
+
+    let values = [];
+    _.forIn(this._data, (record, id) => {
+      if (!record.enabled) return;
+
+      let x = record.x;
+      let y = record.y;
+      values.push({
+        id: record.id,
+        name: record.name,
+        xValue: x[i],
+        yValue: y[i],
+        color: record.color,
+        i: i
+      })
+    })
+    return values;
+  },
+
+  //TODO:
+  getMinXValue: function () {
+    for (let k in this._data) {
+      let record = this._data[k];
+      if (!record.enabled) continue;
+
+      return record.minXValue;
+    }
+  },
+
+  //TODO:
+  getMaxXValue: function () {
+    for (let k in this._data) {
+      let record = this._data[k];
+      if (!record.enabled) continue;
+
+      return record.maxXValue;
+    }
+  },
+
+  interpolateXValue: function (x, minXValue, xRatio) {
+    let val = xRatio * (x - minXValue) * this._xScale;
+    let p = (this._xTranslate * this.width);
+
+    return _.round(val - p);
+  },
+
+  interpolateX: function (x, minXValue, xRatio) {
+    let p = (this._xTranslate * this.width);
+    x = p + x;
+
+    return minXValue + x / (xRatio * this._xScale);
+  },
+
+  interpolateYValue: function (y, empty, yRatio) {
+    let y1 = yRatio * y * this._yScale;
+    return this.height - y1;
+  },
+
+  interpolateY: function (y, minYValue, yRatio) {
+    return _.round((this.height - y) / (yRatio * this._yScale));
+  },
+
+  getClosestIndexByXValue: function (xValue, x) {
+    let s, e;
+    for (let i = 0, length = x.length; i < length; i++) {
+      e = i;
+      s = i == 0 ? 0 : i - 1;
+      if (x[i] > xValue) {
+        break;
+      }
+    }
+    let i = (x[e] - xValue) > (xValue - x[s]) ? s : e;
+    return i;
+  },
+
+  //TODO:
+  get state() {
+    return {
+      xTranslate: this._xTranslate,
+      xScale: this._xScale,
+      isZoomed: this._options.isZoomed
+    }
+  },
+
+  get container() {
+    return this._container;
+  },
+
+  get marginTop() {
+    let marginTop = parseFloat(getComputedStyle(this._el).marginTop);
+    delete this.marginTop;
+    Object.defineProperty(this, 'marginTop', { get() { return marginTop; } });
+    return marginTop;
+  },
+
+  get marginLeft() {
+    let marginLeft = parseFloat(getComputedStyle(this._el).marginLeft);
+    delete this.marginLeft;
+    Object.defineProperty(this, 'marginLeft', { get() { return marginLeft; } });
+    return marginLeft;
+  },
+
+  get marginBottom() {
+    let marginBottom = parseFloat(getComputedStyle(this._el).marginBottom);
+    delete this.marginBottom;
+    Object.defineProperty(this, 'marginBottom', { get() { return marginBottom; } });
+    return marginBottom;
+  },
+
+  // static
+  get height() {
+    let height = _.getHeight(this._ctx.canvas)
+    delete this.height;
+    Object.defineProperty(this, 'height', { get() { return height; } });
+    return height;
+  },
+
+  // static
+  get width() {
+    let width = _.getWidth(this._ctx.canvas)
+    delete this.width;
+    Object.defineProperty(this, 'width', { get() { return width; } });
+    return width;
+  },
+
+  get disabled() {
+    let d = [];
+    _.forIn(this._data, (record, id) => {
+      if (record.enabled) return;
+      d.push(id);
+    });
+
+    return d;
+  },
+
+  // TODO: move out
+  addInterface: function (i) {
+    (!this.supportInterface(i))
+      this._interfaces.push(i);
+  },
+
+  supportInterface: function (i)  {
+    return this._interfaces.indexOf(i) !== -1;
+  }
+}
+
+module.exports = Graph;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const html = __webpack_require__(16);
+const _ = __webpack_require__(0);
+const moment = __webpack_require__(5);
+const Popup = __webpack_require__(1).singleton;
+
+// https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
+let supportsPassive = false;
+try {
+  let opts = Object.defineProperty({}, 'passive', {
+    get: function() {
+      supportsPassive = true;
+    }
+  });
+  window.addEventListener("testPassive", null, opts);
+  window.removeEventListener("testPassive", null, opts);
+} catch (e) {}
+
+function GraphInteractive (graph) {
+  this._graph = graph;
+  this._el = null;
+  this._canvas = null;
+
+  this.wrap(graph);
+  this.render();
+  this.bindHover(this._canvas);
+}
+
+GraphInteractive.prototype = {
+  wrap: function () {
+    throw new Error("Implement wrap function");
+  },
+
+  bindHover: function (node) {
+    if (!this._graph.supportInterface('IInteractive')) {
+      throw new Error("Graph should support IInteractive");
+    }
+
+    let selected = null;
+    let touching = false;
+
+    // TODO:
+    node.addEventListener('mouseenter', (e) => {
+      this.bindKeyboard && this.bindKeyboard();
+    });
+
+    node.addEventListener('mousemove', (e) => {
+      if (touching) return;
+      if (e.target !== node) return;
+      let x = e.offsetX - this._graph.marginLeft;
+      if (x < 0) return;
+      if (x > this._graph.width) return;
+
+      this._graph.IInteractive_select(x, e);
+      selected = true;
+    });
+
+    node.addEventListener('touchstart', (e) => {
+      if (e.target !== node) return;
+      touching = true;
+      console.log('touchstart');
+
+      let touch = e.touches[0];
+      let x = touch.clientX - this._graph.marginLeft;
+      if (x < 0) return;
+      x -= _.offsetLeft(node);
+      if (x > this._graph.width) return;
+
+      this._graph.IInteractive_select(x, e);
+      selected = true;
+    }, supportsPassive ? {passive: false} : false);
+
+    node.addEventListener('mouseleave', (e) => {
+      if (e.relatedTarget === Popup.el ||
+        _.isChild(e.relatedTarget, Popup.el)) return;
+
+
+      requestAnimationFrame(() => {
+        this._graph.IInteractive_deselect();
+        selected = false;
+      });
+    })
+
+    node.addEventListener('click', (e) => {
+      if (touching) return;
+      if (selected) this._graph.IInteractive_click();
+    })
+  },
+
+  render: function () {
+    let container = this._graph.container;
+
+    let doc = document.createElement('div');
+    doc.innerHTML = html;
+    let el = this._el = doc.firstChild;
+    container.appendChild(el);
+    let svg = el.querySelector('svg');
+    this._canvas = svg;
+  },
+
+  showPopup: function (x, y, options) {
+    // TODO
+    if (options.xValue !== undefined) {
+      Popup.setTitle(this._formatTimestamp(options.xValue, options.isZoomed, options.xValueStep));
+      Popup.showTitle();
+    } else {
+      Popup.hideTitle();
+    }
+    Popup.setOnClick(options.onClick);
+    Popup.setDescription(options.desc);
+    Popup.show(x, y);
+  },
+
+  hidePopup: function () {
+    Popup.hide();
+  },
+
+  // Sat, 20 Apr 2019
+  // 01:00
+  // 01:15
+  _formatTimestamp: function (t, isZoomed, xValueStep) {
+    let d = new Date(t);
+    const HOUR = 1000 * 60 * 60;
+
+    //TODO:
+    if (!isZoomed) {
+      return `${moment.getDay(d)}, ${d.getUTCDate()} ${moment.getMon(d)} ${d.getUTCFullYear()}`;
+    } else {
+      if (xValueStep < HOUR) {
+        return moment.getRoundHoursWithMinutes(d);
+      } else {
+        return moment.getRoundHours(d);
+      }
+    }
+  },
+
+}
+
+module.exports = GraphInteractive;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0);
+const html = __webpack_require__(20);
+const moment = __webpack_require__(5);
+__webpack_require__(21);
+
+
+const defaultOptions = {
+  xStep: 100 * _.dpr,
+  yStep: 60 * _.dpr,
+  minXStep: 50 * _.dpr,
+  maxXStep: 130 * _.dpr
+}
+
+function Grid(graph, options) {
+  this._graph = graph;
+  this._container = graph.container;
+  this._svg = null;
+  this._options = _.extend({}, defaultOptions, options);
+  this._drawn = false;
+  this._xStep = this._options.xStep;
+
+  this._xAxisNode = null;
+  this._yAxisNode = null;
+
+  this.render();
+}
+
+Grid.prototype = {
+  draw: function (minXValue, maxXValue, minYValue, maxYValue) {
+    if (!this._drawn) {
+      this._drawXAxis(minXValue, maxXValue);
+      this._drawYAxis(minYValue, maxYValue);
+      this._drawn = true;
+    } else {
+      this._redrawXAxis(minXValue, maxXValue);
+      this._drawYAxis(minYValue, maxYValue);
+    }
+  },
+
+  drawDualY: function (minValues, maxValues, colors) {
+    if (minValues.length > 2 || maxValues.length > 2)
+      throw new Error("Not supported");
+
+    if (!this._drawn) {
+      this._drawXAxis(minValues[0][0], maxValues[0][0]);
+      this._drawn = true;
+    } else {
+      this._redrawXAxis(minValues[0][0], maxValues[0][0]);
+    }
+
+    this._drawYAxis(minValues[0][1], maxValues[0][1], colors[0], false);
+    minValues.length == 2 && this._drawYTitles(minValues[1][1], maxValues[1][1], colors[1], true);
+  },
+
+  render: function() {
+    let doc = document.createElement('div');
+    doc.innerHTML = html;
+    let el = doc.firstChild;
+    this._container.appendChild(el);
+    this._svg = el.querySelector('svg');
+  },
+
+  _clearRect: function () {
+    while (this._svg.childNodes.length) {
+      this._svg.removeChild(this._svg.firstChild);
+    }
+  },
+
+  _drawXAxis: function (minXValue, maxXValue) {
+    let self = this;
+    let g = document.createElementNS(_.SVG_NS, 'g')
+    let l = document.createElementNS(_.SVG_NS, 'line');
+    g.appendChild(l);
+    this._svg.appendChild(g);
+
+    let graph = this._graph;
+    let x1 = graph.marginLeft;
+    let x2 = x1 + graph.width;
+    let y = graph.marginTop + graph.height;
+    l.setAttribute('x1', x1);
+    l.setAttribute('y1', y);
+    l.setAttribute('x2', x2);
+    l.setAttribute('y2', y);
+
+    this._xAxisNode = document.createElementNS(_.SVG_NS, 'g');
+    g.appendChild(this._xAxisNode);
+
+    let steps = graph.width / this._xStep;
+    this._xValueStep = (maxXValue - minXValue) / steps;
+    this._drawXTitles(minXValue, maxXValue);
+  },
+
+  _redrawXAxis: function (minXValue, maxXValue) {
+    let steps = (maxXValue - minXValue) / this._xValueStep;
+    this._xStep = this._graph.width / steps;
+    this._clearNode(this._xAxisNode);
+
+    if ((this._xStep < this._options.minXStep) ||
+        (this._xStep > this._options.maxXStep)) {
+
+      this._xStep = this._options.xStep;
+      steps = this._graph.width / this._xStep;
+      this._xValueStep = (maxXValue - minXValue) / steps;
+    }
+
+    this._drawXTitles(minXValue, maxXValue);
+  },
+
+  _drawXTitles: function (minXValue, maxXValue) {
+    let graph = this._graph;
+    let x1 = graph.marginLeft;
+    let y = graph.marginTop + graph.height;
+    let self = this;
+    let steps = graph.width / this._xStep;
+
+    //TODO: hardcode for timestamp
+    //min step
+    {
+      const H_HOUR = 1000 *  60 * 60;
+      const M20 = 1000 * 60 * 20;
+      const M5 = 1000 * 60 * 5;
+      if (this._xValueStep < M5 * 4) {
+        this._xValueStep = M5;
+        steps = (maxXValue - minXValue) / this._xValueStep;
+        this._xStep = this._graph.width / steps;
+     } else if (this._xValueStep < M20 * 3) {
+        this._xValueStep = M20;
+        steps = (maxXValue - minXValue) / this._xValueStep;
+        this._xStep = this._graph.width / steps;
+      } else if (this._xValueStep < H_HOUR * 2) {
+        this._xValueStep = H_HOUR;
+        steps = (maxXValue - minXValue) / this._xValueStep;
+        this._xStep = this._graph.width / steps;
+      }
+    }
+
+    let xConvertor = this._getXConvertor('timestamp', minXValue, minXValue + this._xValueStep);
+    for (let i = 0; i <= steps; i++) {
+      let xValue = i === 0 ? minXValue : minXValue + this._xValueStep * i;
+      drawTitle(x1 + i * this._xStep, y + graph.marginBottom / 2, xValue, i === steps);
+    }
+
+    function drawTitle(x, y, xValue, isLast) {
+      let text = document.createElementNS(_.SVG_NS, 'text');
+      self._xAxisNode.appendChild(text);
+      text.setAttribute('x', x)
+      text.setAttribute('y', y)
+      text.innerHTML = xConvertor(xValue);
+      isLast ? text.setAttribute('text-anchor', 'end') : null;
+    }
+  },
+
+  _drawYAxis: function (minYValue, maxYValue, color, right) {
+    if (!this._yAxisNode) {
+      this._yAxisNode = document.createElementNS(_.SVG_NS, 'g')
+      this._svg.appendChild(this._yAxisNode);
+    } else {
+      this._clearNode(this._yAxisNode);
+    }
+
+    let self = this;
+    let graph = this._graph;
+    let steps = graph.height / this._options.yStep;
+    let yValueStep = (maxYValue - minYValue) / steps;
+
+    for (i = 0; i <= steps; i++) {
+      let yValue = i * yValueStep;
+      drawLine(graph.height - i * this._options.yStep, yValue, i === 0);
+    }
+
+    this._drawYTitles(minYValue, maxYValue, color, right);
+
+    function drawLine(height, yValue, isFirst) {
+      let x1 = graph.marginLeft;
+      let x2 = x1 + graph.width;
+      let y = graph.marginTop + height;
+      if (!isFirst) {
+        let l = document.createElementNS(_.SVG_NS, 'line');
+        self._yAxisNode.appendChild(l);
+        l.setAttribute('x1', x1);
+        l.setAttribute('y1', y);
+        l.setAttribute('x2', x2);
+        l.setAttribute('y2', y);
+      }
+    }
+  },
+
+  _drawYTitles(minYValue, maxYValue, color, right) {
+    let self = this;
+    let graph = this._graph;
+    let steps = graph.height / this._options.yStep;
+    let yValueStep = (maxYValue - minYValue) / steps;
+    let yConvertor = this._getYConvertor('number');
+
+    let x1 = right ? graph.width + graph.marginLeft : graph.marginLeft;
+    for (i = 0; i <= steps; i++) {
+      let yValue = i * yValueStep;
+      let y = graph.height - i * this._options.yStep + graph.marginTop;
+      drawTitle(this._yAxisNode, x1, y, yValue);
+    }
+
+    function drawTitle(node, x, y, yValue) {
+      let text = document.createElementNS(_.SVG_NS, 'text');
+      node.appendChild(text);
+      text.setAttribute('x', x)
+      text.setAttribute('y', y - 5) // TODO: 5?
+      color && text.setAttribute('fill', color)
+      right && text.setAttribute('text-anchor', 'end');
+      text.innerHTML = yConvertor(yValue);
+    }
+  },
+
+  _getYConvertor: function (type) {
+    if (type !== 'number')
+      throw new Error(`The type ${type} is not supported`);
+
+    let M = Math.pow(10, 6);
+    let K = Math.pow(10, 3);
+    return function (yValue) {
+      if (yValue > M) {
+        return `${_.round(yValue / M)}M`
+      } else if (yValue > K * 10) {
+        return `${_.round(yValue / K)}K`
+      } else {
+        return _.round(yValue);
+      }
+    }
+  },
+
+
+  _getXConvertor: function (type, firstXValue, secondXValue) {
+    if (type !== 'timestamp')
+      throw new Error(`The type ${type} is not supported`);
+
+    const DAY = 1000 * 60 * 60 * 24;
+    const Q_DAY = 1000 * 60 * 60 * 24 / 4;
+    //TODO
+    const H_HOUR = 1000 *  60 * 60;
+    let diff = secondXValue - firstXValue;
+
+    if (diff > DAY) {
+      return function (value) {
+        let d = new Date(value);
+        return `${d.getDate()} ${moment.getMon(d)}`;
+      }
+    } else if (diff > Q_DAY && diff < H_HOUR * 2) {
+      return function (value) {
+        let d = new Date(value);
+        return `${moment.getRoundHours(d)} ${d.getDate()} ${moment.getMon(d)}`;
+      }
+    } else if (diff < H_HOUR * 2) {
+      //TODO
+      return function (value) {
+        let d = new Date(value);
+        return `${moment.getRoundHoursWithMinutes(d)}`;
+      }
+    } else {
+      return function (value) {
+        let d = new Date(value);
+        return moment.getRoundHours(d);
+      }
+    }
+  },
+
+  _clearNode: function (node) {
+    while (node.childNodes.length) {
+      node.removeChild(node.firstChild);
+    }
+  }
+}
+
+module.exports = Grid
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ];
+
+const moment = {
+  getRoundHours: function (d) {
+    let h = d.getUTCHours();
+    let m = d.getUTCMinutes();
+    if (m >= 30) h += 1;
+
+    h = h === 24 ? 0 : h;
+    h = `${h}`;
+    h = (h.length === 2) ? h : `0${h}`;
+
+    return `${h}:00`;
+  },
+
+  getRoundHoursWithMinutes: function (d) {
+    let h = d.getUTCHours();
+    let m = d.getUTCMinutes();
+
+    h = h === 24 ? 0 : h;
+    h = `${h}`;
+    h = (h.length === 2) ? h : `0${h}`;
+
+    m = `${m}`
+    m = (m.length === 2) ? m : `0${m}`;
+
+    return `${h}:${m}`;
+  },
+
+  getMonth: function (d) {
+    let n = d.getUTCMonth();
+    return months[n];
+  },
+
+  getMon: function (d) {
+    let n = d.getUTCMonth();
+    return months[n].substr(0, 3);
+  },
+
+  getDay: function (d) {
+    let n = d.getUTCDay();
+    return days[n].substr(0, 3);
+  },
+}
+
+module.exports = moment;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+
+const HOST = ''
+
+function DataProvider() {
+  this._data = {}
+  this._dataByDays = {}
+}
+
+DataProvider.prototype = {
+  load: function (id, cb) {
+    if (this._data[id])
+      return cb && cb(null, this._data[id]);
+
+    let xhr = new XMLHttpRequest();
+    let self = this;
+    xhr.addEventListener('load', function (e) {
+      if (xhr.status !== 200) {
+        return cb && cb(xhr.status);
+      }
+
+      let data = xhr.response;
+      data.id = id;
+      self._data[id] = data;
+      cb && cb(null, data);
+    })
+
+    xhr.open('GET', this._getPath(`${id}/overview.json`));
+    xhr.responseType = 'json';
+    xhr.send();
+  },
+
+  loadByTimestamp: function(id, timestamp, cb) {
+    let data = this._dataByDays[id];
+    if (!data) {
+      data = this._dataByDays[id] = {}
+    }
+
+    let date = new Date(timestamp);
+    let m = `${date.getMonth() + 1}`;
+    m = (m.length === 2) ? m : `0${m}`;
+    let prefix = `${date.getFullYear()}-${m}`
+    let month = data[prefix];
+
+    if (!month) {
+      month = data[prefix] = {}
+    }
+    let d = `${date.getDate()}`;
+    d = (d.length === 2) ? d : `0${d}`;
+
+    data = month[d];
+    if (data) {
+      return cb(null, data);
+    }
+
+    let xhr = new XMLHttpRequest();
+    let self = this;
+    xhr.addEventListener('load', function (e) {
+      if (xhr.status !== 200) {
+        return cb && cb(xhr.status);
+      }
+
+      let data = xhr.response;
+      data.id = id;
+      month[d] = data;
+      cb && cb(null, data);
+    })
+
+    xhr.open('GET', this._getPath(`${id}/${prefix}/${d}.json`));
+    xhr.responseType = 'json';
+    xhr.send();
+  },
+
+  getData: function (id) {
+    let data = this._data[id]
+    if (!data) {
+      throw new Error('Load first data before usage');
+    }
+
+    return data
+  },
+
+  _getPath: function (path) {
+    return `${HOST}${path}`;
+  }
+}
+
+module.exports = new DataProvider();
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0)
+const html = __webpack_require__(34)
+__webpack_require__(35);
+
+const Graph = __webpack_require__(2);
+const Grid = __webpack_require__(4)
+
+
+const defaultOptions = {
+  width: 500,
+  height: 100
+}
+
+/**
+ *
+ * options {Object}
+ *  @key {Boolean} withGrid
+ *  @key {Boolean} scaleY
+ *  @key {Boolean} disabled
+ */
+function HistogramGraph(container, data, options) {
+  this._container = container;
+  this._options = _.extend({}, defaultOptions, options);
+  this._canvas = null;
+  this._el = null;
+  this._ctx = null;
+  this._data = null;
+  this._grid = options.withGrid ? new Grid(this) : null;
+  //TODO:
+  this._interfaces = [];
+
+  this._xScale = 1;
+  this._yScale = 1;
+  this._xTranslate = 0;
+
+  this._stack = [];
+
+  this.computeData(data, this._options.disabled);
+  this.render();
+  this.draw();
+}
+
+HistogramGraphProto.prototype = Object.create(Graph.prototype);
+HistogramGraph.prototype = new HistogramGraphProto();
+
+function HistogramGraphProto () {
+  Graph.call(this);
+
+  this.draw = function (xScale, xTranslate, highlightX) {
+    this._xScale = xScale || this._xScale;
+    this._xTranslate = xTranslate === undefined ? this._xTranslate : xTranslate;
+
+    this._ctx.clearRect(0, 0, this.width, this.height);
+    this._stack = [];
+
+    _.forIn(this._data, (bar, id) => {
+      if (!bar.enabled) return;
+      this._drawBar(bar.x, bar.y, bar, highlightX)
+    })
+
+    // TODO:
+    if (this._grid) this.drawGrid();
+  };
+
+  this.render = function () {
+    let doc = document.createElement('div');
+    doc.innerHTML = html;
+    let el = this._el = doc.firstChild;
+    this._container.appendChild(el);
+
+    this._canvas = el.querySelector('canvas');
+    this._canvas.setAttribute('width', this._options.width);
+    this._canvas.setAttribute('height', this._options.height);
+    this._ctx = this._canvas.getContext('2d');
+  };
+
+  this.select = function (x) {
+    this.draw(this._xScale, this._xTranslate, x);
+  };
+
+  this.deselect = function () {
+    this.draw(this._xScale, this._xTranslate);
+  };
+
+  this._drawBar = function (x, y, bar, highlightX) {
+    let minXValue = bar.minXValue = x[0];
+    let maxXValue = bar.maxXValue = _.last(x);
+    let xRatio = bar.xRatio = this.width / (maxXValue - minXValue);
+
+    let minYValue = bar.minYValue = 0;
+    let Y = y;
+    if (this._options.scaleY) {
+      let minXValue = this.interpolateX(0, bar.minXValue, bar.xRatio);
+      let maxXValue = this.interpolateX(this.width, bar.minXValue, bar.xRatio);
+      let minI = this.getClosestIndexByXValue(minXValue, bar.x)
+      let maxI = this.getClosestIndexByXValue(maxXValue, bar.x)
+      Y = Y.slice(minI, maxI);
+    }
+    let maxYValue = bar.maxYValue = _.max(Y);
+    let yRatio = bar.yRatio = this.height / (maxYValue - minYValue);
+
+    let xStep = (this.width / x.length) * this._xScale;
+    this._ctx.fillStyle = bar.color;
+
+    if (highlightX) {
+      //this._ctx.globalAlpha = 0.5;
+      let highlightXValue = this.interpolateX(highlightX, bar.minXValue, bar.xRatio);
+      let j = this.getClosestIndexByXValue(highlightXValue, bar.x);
+      let x1 = this.interpolateXValue(x[0], minXValue, xRatio);
+      let y1;
+      for (i = 0; i < x.length - 1; i++) {
+        y1 = this.interpolateYValue(y[i], null, yRatio);
+        let x2 = this.interpolateXValue(x[i + 1], minXValue, xRatio)
+        this._ctx.globalAlpha = (i === j) ? 1 : 0.5;
+
+        this._ctx.fillRect(x1, y1, x2 - x1, this.height - y1);
+        x1 = x2;
+      }
+      this._ctx.globalAlpha = (i === j) ? 1 : 0.5;
+      this._ctx.fillRect(x1, y1, x1, this.height - y1);
+    } else {
+      this._ctx.globalAlpha = 1;
+      let x1 = this.interpolateXValue(x[0], minXValue, xRatio);
+      let y1;
+      for (i = 0; i < x.length - 1; i++) {
+        y1 = this.interpolateYValue(y[i], null, yRatio);
+        let x2 = this.interpolateXValue(x[i + 1], minXValue, xRatio)
+
+        this._ctx.fillRect(x1, y1, x2 - x1, this.height - y1);
+        x1 = x2;
+      }
+      this._ctx.fillRect(x1, y1, xStep, this.height - y1);
+    }
+
+    bar.visibleMinXValue = this.interpolateX(0, minXValue, xRatio);
+    bar.visibleMaxXValue = this.interpolateX(this.width, minXValue, xRatio);
+    bar.visibleMinYValue = this.interpolateY(this.height, minYValue, yRatio);
+    bar.visibleMaxYValue = this.interpolateY(0, minYValue, yRatio);
+  };
+
+  this.getClosestIndexByXValue = function (xValue, x) {
+    let i = 1;
+    for (let length = x.length; i < length; i++) {
+      if (x[i] > xValue) {
+        return i - 1;
+      }
+    }
+    return i - 1;
+  }
+}
+
+module.exports = HistogramGraph;
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0)
+const html = __webpack_require__(36);
+__webpack_require__(37)
+
+const InteractiveBase = __webpack_require__(3);
+const Popup = __webpack_require__(1).singleton;
+
+function HistogramInteractive(graph) {
+  InteractiveBase.call(this, graph);
+
+  this._xValue = null;
+  this._onClick = this._onClick.bind(this);
+}
+
+HistogramInteractive.prototype = Object.assign({}, InteractiveBase.prototype, {
+  wrap: function () {
+    let graph = this._graph;
+    let self = this;
+    graph.addInterface('IInteractive');
+
+    graph.IInteractive_select = function (x) {
+      graph.select(x);
+      let values = graph.getValues(x);
+      let xValue;
+      let desc = [];
+      _.forEach(values, value => {
+        desc.push({
+          title: value.name,
+          value: value.yValue,
+          color: value.color
+        })
+
+        xValue = value.xValue;
+      })
+
+      self._xValue = xValue;
+      let y = _.offsetTop(self._el);
+      x += _.offsetLeft(self._el);
+      self.showPopup(x, y, {
+        xValue: xValue,
+        onClick: self._onClick,
+        desc: desc,
+        // TODO
+        isZoomed: graph.state.isZoomed
+      })
+    }
+
+    graph.IInteractive_deselect = function () {
+      graph.deselect();
+      self.hidePopup();
+    }
+
+    graph.IInteractive_click = function () {
+      self._onClick();
+    }
+  },
+
+  render: function () {
+    let container = this._graph.container;
+
+    let doc = document.createElement('div');
+    doc.innerHTML = html;
+    let el = this._el = doc.firstChild;
+    this._canvas = this._el // TODO:
+    container.appendChild(el);
+  },
+
+  _onClick: function (e) {
+    let event = document.createEvent('Event');
+    event.initEvent('zoom', true, true);
+
+    event.xValue = this._xValue;
+    event.xTranslate = this._graph.state.xTranslate;
+    event.xScale = this._graph.state.xScale;
+
+    this._canvas.dispatchEvent(event);
+  },
+})
+
+module.exports = HistogramInteractive;
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0);
+
+module.exports = {
+  SLIDER_HEIGHT: 47 * _.dpr,
+  PREVIEW_HEIGHT: 47 * _.dpr,
+  CANVAS_HEIGHT: 41 * _.dpr,
+
+  SLIDER_LEFT_WIDTH: 14 * _.dpr,
+  SLIDER_RIGHT_WIDTH: 14 * _.dpr,
+  SLIDER_BORDER: 3 * _.dpr
+}
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(12)
+
+const _ = __webpack_require__(0)
+const Chart = __webpack_require__(13);
+const dataProvider = __webpack_require__(6);
+
+let mode = 0
+const modes = ['light', 'dark'];
+
+
+window.addEventListener('load', () => {
+  let chart1 = new Chart('.g1');
+  dataProvider.load(1, function (err, data) {
+    if (err) return;
+    chart1.draw(data, { title: 'Followers' });
+  })
+
+  let chart2 = new Chart('.g2');
+  dataProvider.load(2, function (err, data) {
+    if (err) return;
+    chart2.draw(data, { title: 'Interactions' });
+  })
+
+
+  let chart3 = new Chart('.g3');
+  dataProvider.load(3, function (err, data) {
+    if (err) return;
+
+    chart3.determineDriver(data);
+    chart3.draw(data, { title: 'Messages' });
+  })
+
+  let chart4 = new Chart('.g4');
+  dataProvider.load(4, function (err, data) {
+    if (err) return;
+
+    chart4.determineDriver(data);
+    chart4.draw(dataProvider.getData(4), { title: 'Views' });
+  })
+
+  let chart5 = new Chart('.g5');
+  dataProvider.load(5, function (err, data) {
+    if (err) return;
+
+    chart5.determineDriver(data);
+    chart5.draw(dataProvider.getData(5), { title: 'Apps' });
+  })
+
+  let modeSwitcher = document.querySelector('#mode-switcher');
+  setModeSwitcherText();
+  modeSwitcher.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (mode  === 0) {
+      _.addClass(document.body, 'dark');
+      mode = 1;
+    } else {
+      _.removeClass(document.body, 'dark');
+      mode = 0;
+    }
+    setModeSwitcherText();
+  })
+  function setModeSwitcherText() {
+    let text = 'Switch to';
+    text += mode === 0 ? ' Night Mode' : ' Day Mode';
+    modeSwitcher.innerHTML = text;
+  }
+});
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0)
+const DataProvider = __webpack_require__(6)
+
+const AreaDriver = __webpack_require__(14)
+const PieDriver = __webpack_require__(23)
+const LineDriver = __webpack_require__(27)
+const HistogramDriver = __webpack_require__(33)
+const StackedHistogramDriver = __webpack_require__(38)
+
+const Plot = __webpack_require__(41)
+const Preview = __webpack_require__(44)
+const CheckboxGroup = __webpack_require__(47)
+const Popup = __webpack_require__(1).singleton;
+
+function Chart(s, options) {
+  this._container = document.querySelector(s);
+  this.setDriver(options && options.driver);
+
+  this._plot = new Plot(this._container);
+  this._preview = null;
+  this._checkboxGroup = null;
+  // TODO:
+  this._dataId = null;
+  this._title = null;
+  this._isZoomed = false;
+  this._xScale = null;
+  this._xTranslate = null;
+
+  this._container.style.width = `${_.requestWidth()}px`;
+
+  this._container.addEventListener('zoom', (e) => {
+    e.stopPropagation();
+    this.zoomIn(e.xValue, e.xScale, e.xTranslate);
+  })
+
+  this._container.addEventListener('zoomToPie', (e) => {
+    e.stopPropagation();
+    this.zoomToPie(e.xValue, e.xScale, e.xTranslate, e.data);
+  })
+
+  this._container.addEventListener('zoomout', (e) => {
+    e.stopPropagation();
+    this.zoomOut();
+  })
+}
+
+Chart.prototype = {
+  draw: function (data, options) {
+    // TODO:
+    this._dataId = data.id;
+    this._title = options && options.title;
+
+    this._plot.draw(data, this._driver, options);
+    this._preview = new Preview(this._container, {onChange: this._onChange.bind(this)});
+    this._preview.draw(data, this._previewDriver);
+
+    this.drawCheckboxes(data);
+  },
+
+  drawCheckboxes: function (data, disabled) {
+    if (!this._checkboxGroup) {
+     this._checkboxGroup = new CheckboxGroup(this._container);
+    }
+    let minChecked = 1;
+    if (this._driver.name === 'pie' || this._driver.name === 'area') minChecked = 2;
+    this._checkboxGroup.draw(data, {
+      onChange: (k, enabled) => { this._toggleGraph(k, enabled) },
+      disabled: disabled,
+      minChecked: minChecked
+    })
+  },
+
+  determineDriver: function (data) {
+    let type = data.types.y0; // TODO:
+
+    if (type === 'bar') {
+      if (data.stacked) {
+        return this.setDriver('stackedHistogram');
+      }
+
+      return this.setDriver('histogram');
+    }
+
+    if (type === 'area') {
+      return this.setDriver('area');
+    }
+
+    if (type === 'pie') {
+      return this.setDriver('pie');
+    }
+
+    return this.setDriver('line');
+  },
+
+  setDriver: function (str) {
+    if (this._driver && this._driver.name === str) return;
+
+    switch (str) {
+      case 'pie':
+        this._driver = new PieDriver();
+        this._previewDriver = new AreaDriver();
+        break;
+      case 'histogram':
+        this._driver = new HistogramDriver();
+        this._previewDriver = this._driver;
+        break;
+      case 'stackedHistogram':
+        this._driver = new StackedHistogramDriver();
+        this._previewDriver = this._driver;
+        break;
+      case 'area':
+        this._driver = new AreaDriver();
+        this._previewDriver = this._driver;
+        break;
+      case 'line':
+      default:
+        this._driver = new LineDriver();
+        this._previewDriver = this._driver;
+        break;
+    }
+  },
+
+  zoomIn: function (xValue, xScale, xTranslate)  {
+    if (this._isZoomed) {
+    // TODO: plot components
+      let node = this._plot.container.querySelector('.zoom_out')
+      _.shake(node);
+      return;
+    }
+
+    DataProvider.loadByTimestamp(this._dataId, xValue, (err, data) => {
+      if (err) return;
+        this._zoomIn(xValue, data);
+
+        this._xScale = xScale;
+        this._xTranslate = xTranslate;
+    });
+  },
+
+  zoomToPie: function (xValue, xScale, xTranslate, data) {
+    if (this._isZoomed) return;
+    DataProvider.loadByTimestamp(this._dataId, xValue, (err, data) => {
+      //TODO: merge with zoomIn
+      if (err) return;
+        Popup.hide();
+        this._plot.disappear();
+        this._preview.disappear();
+        let disabled = this._plot.graph.disabled;
+        this.drawCheckboxes(data, disabled);
+
+        setTimeout(() => {
+          this._plot.appear();
+          this._preview.appear();
+          this.setDriver('pie');
+
+          this._plot.draw(data, this._driver, {isZoomed: true, disabled: disabled});
+          this._preview.draw(data, this._previewDriver, {disabled: disabled});
+          this._isZoomed = true;
+
+          { // TODO: improve
+            let minXValue = this._plot.graph.getMinXValue();
+            let maxXValue = this._plot.graph.getMaxXValue();
+            let H_DAY = 1000 * 60 * 60 * 24;
+            let nextValue = xValue + H_DAY;
+
+            let xScale = (maxXValue - minXValue) / (H_DAY);
+            let xTranslate = (xValue - minXValue) / (nextValue - xValue);
+
+            this._preview.update(xScale,  xTranslate);
+          }
+          this._isZoomed = true;
+        }, 200);
+
+        this._xScale = xScale;
+        this._xTranslate = xTranslate;
+    });
+  },
+
+  zoomOut: function () {
+    if (!this._isZoomed) return;
+    DataProvider.load(this._dataId, (err, data) => {
+      if (err) return;
+
+      this._plot.disappear();
+      this._preview.disappear();
+
+      let disabled = this._plot.graph.disabled
+      if (this._dataId === 4) disabled = []; // TODO: hack
+      this.drawCheckboxes(data, disabled);
+
+      setTimeout(() => {
+        this._plot.appear();
+        this._preview.appear();
+
+        this.determineDriver(data);
+        this._plot.draw(data, this._driver, {isZoomed: false, title: this._title, disabled: disabled});
+        this._preview.draw(data, this._previewDriver, {disabled: disabled});
+        this._preview.update(this._xScale, this._xTranslate);
+        this._isZoomed = false;
+      }, 200);
+    })
+    Popup.hide();
+  },
+
+  _zoomIn: function (xValue, data) {
+    Popup.hide();
+    this._plot.disappear();
+    this._preview.disappear();
+    this.drawCheckboxes(data, this._plot.graph.disabled);
+
+    setTimeout(() => {
+      let disabled = this._plot.graph.disabled;
+
+      this._plot.appear();
+      this._preview.appear();
+      this.determineDriver(data);
+      this._plot.draw(data, this._driver, {isZoomed: true, disabled: disabled});
+      this._preview.draw(data, this._previewDriver, {disabled: disabled});
+      this._isZoomed = true;
+
+      { // TODO: improve
+        this._preview.reset();
+        // TODO: moveout
+        let minXValue = this._plot.graph.getMinXValue();
+        let maxXValue = this._plot.graph.getMaxXValue();
+        let H_DAY = 1000 * 60 * 60 * 24;
+        let nextValue = xValue + H_DAY;
+
+        let xScale = (maxXValue - minXValue) / (nextValue - xValue);
+        let xTranslate = (xValue - minXValue) / (nextValue - xValue);
+        this._preview.update(xScale,  xTranslate);
+      }
+    }, 200);
+  },
+
+  _toggleGraph: function (id, enabled) {
+    if (enabled) {
+      this._plot.graph.enable(id);
+      this._preview.graph.enable(id);
+    } else {
+      this._plot.graph.disable(id);
+      this._preview.graph.disable(id);
+    }
+  },
+
+  _onChange: function (xScale, xTranslate) {
+    this._plot.update(xScale, xTranslate);
+  }
+}
+
+module.exports = Chart
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0)
+let AreaInteractive = __webpack_require__(15)
+
+let AreaGraph = __webpack_require__(19)
+
+function AreaDriver() {
+  this.name = 'area';
+}
+
+AreaDriver.prototype = {
+  draw: function (container, data, options) {
+    let graph = new AreaGraph(container, data, options);
+
+    if (options && options.withInteractive) {
+      let interactive = new AreaInteractive(graph);
+    }
+    return graph;
+  },
+
+  clean: function () {
+  }
+}
+module.exports = AreaDriver
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0);
+
+const InteractiveBase = __webpack_require__(3);
+const Popup = __webpack_require__(1).singleton;
+
+function AreaInteractive(graph) {
+  InteractiveBase.call(this, graph);
+  this._svg = this._canvas;
+  this._line = null;
+
+  this._onClick = this._onClick.bind(this);
+}
+
+AreaInteractive.prototype = Object.assign({}, InteractiveBase.prototype, {
+
+  wrap: function (graph) {
+    graph.addInterface('IInteractive');
+    let self = this;
+
+    graph.IInteractive_select = function (x) {
+      let values = graph.getValues(x);
+      let xValue;
+      let desc = [];
+      _.forEach(values, value => {
+        desc.push({
+          title: value.name,
+          value: value.yValue,
+          color: value.color
+        })
+
+        x = value.x;
+        xValue = value.xValue;
+        let y = _.offsetTop(self._svg); // TODO
+        let atX = x + _.offsetLeft(self._svg);
+        self.showPopup(atX, y, {
+          xValue: xValue,
+          desc: desc,
+          onClick: self._onClick.bind(self, i),
+          //TODO
+          isZoomed: graph.state.isZoomed
+        })
+      })
+      self._xValue = xValue;
+      self._showLine(x)
+    }
+
+    graph.IInteractive_deselect = function () {
+      self._hideLine();
+      Popup.hide();
+    }
+
+    graph.IInteractive_click = function () {
+      self._onClick();
+    }
+  },
+
+  _onClick: function (i) {
+    let event = document.createEvent('Event');
+    event.initEvent('zoomToPie', true, true);
+    /*
+    let data = this._graph.getRawData(i);
+
+    // TODO:
+    for (let k in data.types) {
+      if (data.types[k] === 'x') continue;
+      data.types[k] = 'pie';
+    }
+    */
+
+    event.data = {};
+    event.xValue = this._xValue;
+    let state = this._graph.state;
+    event.xScale = state.xScale;
+    event.xTranslate = state.xTranslate;
+
+    this._canvas.dispatchEvent(event);
+  },
+
+  _showLine: function(x) {
+    let l = this._line;
+    if (!l) {
+      l = document.createElementNS(_.SVG_NS, 'line');
+      this._svg.insertBefore(l, this._svg.firstChild);
+      this._line = l;
+    }
+
+    l.setAttribute('x1', x + this._graph.marginLeft);
+    l.setAttribute('y1', this._graph.marginTop);
+    l.setAttribute('x2', x + this._graph.marginLeft);
+    l.setAttribute('y2', this._graph.height + this._graph.marginTop);
+    l.style.display = 'block';
+  },
+
+  _hideLine: function () {
+    let l = this._line;
+    if (!l) return;
+
+    l.style.display = 'none';
+  },
+});
+
+module.exports = AreaInteractive;
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=graph_interactive> <svg></svg> </div> ";
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=popup> <div class=popup_content> <span class=popup_title></span> <div class=popup_description></div> </div> </div> ";
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0)
+
+const Graph = __webpack_require__(2)
+const Grid = __webpack_require__(4)
+
+const html = __webpack_require__(22)
+
+const defaultOptions = {
+  width: 500,
+  height: 100
+}
+
+/**
+ *
+ * options {Object}
+ *  @key {Boolean} withGrid
+ *  @key {Boolean} scaleY
+ */
+function AreaGraph(container, data, options) {
+  this._container = container;
+  this._options = _.extend({}, defaultOptions, options);
+  this._canvas = null;
+  this._ctx = null;
+  this._data = null;
+  this._rawData = data;
+  this._grid = options.withGrid ? new Grid(this) : null;
+  //TODO:
+  this._interfaces = [];
+
+  this._xScale = 1;
+  this._yScale = 1;
+  this._xTranslate = 0;
+
+  this._Y = null; // y accumulator
+  this._stack = [];
+  this._drawn = false;
+
+  this.computeData(data, this._options.disabled);
+  this.render();
+  this.draw();
+}
+
+AreaGraphProto.prototype = Object.create(Graph.prototype);
+AreaGraph.prototype = new AreaGraphProto();
+
+function AreaGraphProto () {
+  Graph.call(this);
+  this.draw = function (xScale, xTranslate, force) {
+    if (force || !this._drawn) {
+      this._computeY()
+      this._drawn = true;
+    }
+
+    if (this.supportInterface('IInteractive')) {
+      this.IInteractive_deselect();
+    }
+    this._xScale = xScale || this._xScale;
+    this._xTranslate = xTranslate === undefined ? this._xTranslate : xTranslate;
+
+    this._ctx.clearRect(0, 0, this.width, this.height);
+    this._stack = [];
+
+    let areas = []
+    _.forIn(this._data, (area, id) => {
+      if (!area.enabled) return;
+      areas.push(area);
+    });
+
+    if (areas.length < 2) // TODO: alert
+      return;
+
+    _.forEach(areas, (area, i) => {
+      let isLast = areas.length - 1 === i;
+      this._drawArea(area, isLast);
+    })
+
+    // TODO:
+    if (this._grid) this.drawGrid();
+  };
+
+  this.render = function () {
+    let doc = document.createElement('div');
+    doc.innerHTML = html;
+    let el = this._el = doc.firstChild;
+    this._container.appendChild(el);
+
+    this._canvas = el.querySelector('canvas');
+    this._canvas.setAttribute('width', this._options.width);
+    this._canvas.setAttribute('height', this._options.height);
+    this._ctx = this._canvas.getContext('2d');
+  };
+
+  this.getRawData = function (i) {
+    if (i == undefined) return this._rawData;
+
+    // generate slice
+    let s = i - 3;
+    let e = i + 3
+    let column = this._rawData.columns;
+    let x = column[0];
+
+    if (s < 0) {
+      let diff = s * -1;
+      s += diff;
+      e += diff;
+    }
+
+    if (e >= x.length - 1) {
+      let diff = e - x.length - 1
+      s += diff;
+      e += diff;
+    }
+
+    let data = {
+      columns: [],
+      colors: {},
+      names: {},
+      types: {}
+    }
+
+    x = x.slice(s, e)
+    x.unshift('x');
+    data.columns.push(x);
+    data.types['x'] = 'x';
+
+    _.forEach(this._rawData.columns, (c) => {
+      let id = c[0];
+      if (id === 'x') return;
+      let y = c.slice(s, e);
+      y.unshift(id);
+
+      data.columns.push(y);
+      data.types[id] = this._rawData.types[id];
+      data.names[id] = this._rawData.names[id];
+      data.colors[id] = this._rawData.colors[id];
+    })
+
+    return data;
+  };
+
+  this._drawArea = function (area, isLast) {
+    let x = area.x;
+    let y = area.y;
+    let accY = this._Y;
+
+    let minXValue = area.minXValue = _.min(x);
+    let maxXValue = area.maxXValue = _.max(x);
+    let minYValue = area.minYValue = 0;
+    let maxYValue = area.maxYValue = 1;
+
+    let xRatio = area.xRatio = this.width / (maxXValue - minXValue);
+    let yRatio = area.yRatio = this.height / (maxYValue - minYValue);
+
+    this._ctx.beginPath();
+    this._ctx.fillStyle = area.color;
+    this._ctx.strokeStyle = area.color;
+    this._ctx.lineJoin = 'bevel';
+    this._ctx.globalCompositeOperation = 'destination-over';
+
+    for (i = 0; i < x.length; i++) {
+        let stackHeight = getStackHeight.call(this, i);
+        let yValue = isLast ? stackHeight : y[i] + stackHeight;
+        let x1 = this.interpolateXValue(x[i], minXValue, xRatio);
+        let y1 = this.interpolateYValue(yValue / accY[i], null, yRatio);
+        if (i === 0) {
+          this._ctx.moveTo(x1, isLast ? 0 : this.height);
+        }
+        this._ctx.lineTo(x1, y1);
+        if (i === (x.length - 1)) {
+          this._ctx.lineTo(x1,  isLast ? 0 : this.height);
+        }
+    }
+    this._ctx.stroke();
+    this._ctx.fill();
+    this._stack.push(area.id);
+
+    area.visibleMinXValue = this.interpolateX(0, minXValue, xRatio);
+    area.visibleMaxXValue = this.interpolateX(this.width, minXValue, xRatio);
+    area.visibleMinYValue = 0;
+    area.visibleMaxYValue = 100;
+
+    function getStackHeight(i) {
+      let value = 0;
+      _.forEach(this._stack, id => {
+          value += this._data[id].y[i];
+      });
+
+      return value;
+    }
+  };
+
+  //TODO: merge
+  // requires x
+  this.getValues = function (xPoint) {
+    let record;
+    for (let k in this._data) {
+      record = this._data[k];
+      if (record.enabled) break;
+    }
+    let xValue = this.interpolateX(xPoint, record.minXValue, record.xRatio);
+    let i = this.getClosestIndexByXValue(xValue, record.x);
+
+    let values = [];
+    _.forIn(this._data, (record, id) => {
+      if (!record.enabled) return;
+
+      let x = record.x;
+      let y = record.y;
+      values.push({
+        id: record.id,
+        name: record.name,
+        x: this.interpolateXValue(x[i], record.minXValue, record.xRatio),
+        xValue: x[i],
+        yValue: y[i],
+        color: record.color,
+        i: i
+      })
+    })
+    return values;
+  };
+
+
+  // TODO: move to utils
+  this._computeY = function () {
+    let ids =[];
+    _.forIn(this._data, (record, id) => {
+      if (!record.enabled) return;
+      ids.push(id);
+    });
+
+    if (ids.length === 0) {
+      this._Y = [];
+      return;
+    }
+
+    let Y = [];
+    let x = this._data[ids[0]].x;
+    for (let i = 0, l = x.length; i < l; i++) {
+      let value = 0;
+      _.forEach(ids, id => {
+        let record = this._data[id];
+        value += record.y[i];
+      });
+      Y.push(value);
+    }
+
+    this._Y = Y;
+  };
+}
+
+module.exports = AreaGraph;
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=graph_grid> <svg></svg> </div> ";
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"graph area_graph\"> <canvas></canvas> </div> ";
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const PieGraph = __webpack_require__(24)
+let PieInteractive = __webpack_require__(26)
+
+function PieDriver(container) {
+  this.name = 'pie';
+}
+
+PieDriver.prototype = {
+  draw: function (container, data, options) {
+    let graph = new PieGraph(container, data, options);
+
+    if (options && options.withInteractive) {
+      let interactive = new PieInteractive(graph);
+      graph.interactive = interactive; // TODO: hack
+    }
+
+    return graph;
+  }
+}
+
+module.exports = PieDriver;
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0)
+const Graph = __webpack_require__(2)
+
+const html = __webpack_require__(25)
+
+const defaultOptions = {
+  width: 500,
+  height: 100
+}
+
+/**
+ *
+ * options {Object}
+ *  @key {Boolean} disabled
+ */
+function PieGraph (container, data, options) {
+  this._container = container;
+  this._options = _.extend({}, defaultOptions, options);
+  this._svg = null;
+  this._data = null;
+
+  //TODO:
+  this._interfaces = [];
+  this._Y = null;
+
+  this.render();
+  this.computeData(data, this._options.disabled);
+  this.draw();
+}
+
+PieGraphProto.prototype = Object.create(Graph.prototype);
+PieGraph.prototype = new PieGraphProto();
+
+function PieGraphProto () {
+  Graph.call(this);
+
+  // TODO: support render single circle
+  this.draw = function (xScale, xTranslate) {
+    this._xScale = xScale || this._xScale;
+    this._xTranslate = xTranslate === undefined ? this._xTranslate : xTranslate;
+
+    if (this.supportInterface('IInteractive')) {
+      this.IInteractive_deselect();
+    }
+    this._clearRect();
+
+    let record = this.getAnyEnabledRecord();
+    if (!record) return;
+
+    let x = record.x;
+    let minXValue = x[0];
+    let maxXValue = _.last(x);
+
+    let xRatio = this.width / (maxXValue - minXValue);
+    minXValue = this.interpolateX(0, minXValue, xRatio);
+    // TODO:
+    maxXValue = interpolateX.call(this, this.width, minXValue, xRatio);
+    function interpolateX (x, minXValue, xRatio) {
+      return minXValue + x / (xRatio * this._xScale);
+    }
+
+    let minI = 0;
+    for (let i = 0; i < x.length; i++) {
+      if (x[i] >= minXValue) {
+        minI = i;
+        break;
+      }
+    }
+
+    let maxI = x.length - 1;
+    for (let i = minI; i < x.length; i++) {
+      if (x[i] >= maxXValue) {
+        maxI = i - 1;
+        break;
+      }
+    }
+    if (maxI < 0) maxI = 0;
+
+    this._computeY(minI, maxI);
+    this._minI = minI;
+    this._maxI = maxI;
+
+    this._amount = {};
+    let rotate = 0;
+    _.forIn(this._data, pie => {
+      if (!pie.enabled) return;
+
+      let id = pie.id;
+      let angle = this._drawPie(pie, minI, maxI, this._Y, { rotate: rotate });
+      rotate += angle;
+    })
+
+    // TODO: hack
+    if (this.interactive) this.interactive.bindHover();
+  };
+
+  this.getVisibleMinXValue = function () {
+    let record = this.getAnyEnabledRecord();
+    if (!record) return 0;
+
+    return record.x[this._minI];
+  };
+
+  this.getMinXValue = function () {
+    let record = this.getAnyEnabledRecord();
+    if (!record) return 0;
+
+    return record.x[this._minI];
+  },
+
+  this.getMaxXValue = function () {
+    let record = this.getAnyEnabledRecord();
+    if (!record) return 0;
+
+    return record.x[this._maxI];
+  },
+
+  this.getVisibleMaxXValue = function () {
+    let record = this.getAnyEnabledRecord();
+    if (!record) return 0;
+
+    return record.x[this._maxI];
+  };
+
+  this.render = function () {
+    let doc = document.createElement('div');
+    doc.innerHTML = html;
+    let el = this._el = doc.firstChild;
+    this._container.appendChild(el);
+
+    this._svg = el.querySelector('svg');
+    this._svg.setAttribute('width', this._options.width);
+    this._svg.setAttribute('height', this._options.height);
+  }
+
+  Object.defineProperty(this, 'radius', {
+    get() { return this.height / 2; }
+  });
+  Object.defineProperty(this, 'width', {
+    get() {
+      let width = _.width(this._svg)
+      delete this.width;
+      Object.defineProperty(this, 'width', { get() { return width; } });
+      return width;
+    }
+  });
+
+  Object.defineProperty(this, 'height', {
+    get() {
+      let height = _.height(this._svg)
+      delete this.height;
+      Object.defineProperty(this, 'height', { get() { return height; } });
+      return height;
+    }
+  });
+
+  Object.defineProperty(this, 'svg', {
+    get() { return this._svg; }
+  });
+
+  // https://danielpataki.com/svg-pie-chart-javascript/
+  this._drawPie = function (pie, minI, maxI, total, options) {
+    let x = pie.x;
+    let y = pie.y;
+
+    let amount = 0;
+    for (let i = minI; i <= maxI; i++) {
+      amount += y[i];
+    }
+    this._amount[pie.id] = amount;
+
+    let r = this.radius;
+    let vC = r; // vertical center
+    let hC = this.width / 2; // horizontal center
+    let percent = amount / total;
+    let angle = 360 * percent;
+
+    let zAngle = (angle > 180) ? 360 - angle : angle;
+    let zRad = degToRad(zAngle);
+    let zSide = Math.sqrt(2 * r * r - ( 2 * r * r * Math.cos(zRad) ) );
+    let xSide;
+    if (zAngle <= 90) {
+      xSide = r * Math.sin(zRad);
+    } else {
+      zRad = degToRad(180 - zAngle);
+      xSide = r * Math.sin(zRad);
+    }
+
+    let ySide = Math.sqrt(zSide * zSide - xSide * xSide);
+    let Y = ySide;
+    let X;
+    let largeArcFlag = 0;
+
+    if (angle <= 180) {
+      X = hC + xSide;
+    } else {
+      X = hC - xSide;
+      largeArcFlag = 1;
+    }
+
+    let path = document.createElementNS(_.SVG_NS, 'path')
+    this._svg.appendChild(path);
+
+    let d = `M${hC} ${vC}`;
+    d += ` L${hC} 0`;
+    d += ` A${r} ${r} 1 ${largeArcFlag} 1 ${X} ${Y} z`;
+    let rotate = `rotate(${options.rotate} ${hC} ${vC})`;
+    path.setAttribute('d', d);
+    path.setAttribute('transform', rotate);
+    path.setAttribute('fill', pie.color);
+    path.setAttribute('path-id', pie.id); //TODO sic
+
+    function degToRad(angle) {
+      return _.round(angle * (Math.PI / 180), 3);
+    }
+
+    return angle;
+  };
+
+  this._computeY = function (minI, maxI) {
+    let ids = [];
+    _.forIn(this._data, (record, id)  => {
+      if (!record.enabled) return;
+      ids.push(id);
+    });
+
+    if (ids.length === 0) {
+      this._Y = 0;
+      return;
+    }
+
+    let Y = 0;
+    for (let i = minI; i <= maxI; i++) {
+      let value = 0;
+      _.forEach(ids, id =>  {
+        let record = this._data[id];
+        value += record.y[i];
+      })
+      Y += value;
+    }
+
+    this._Y = Y;
+  };
+
+  this._clearRect = function () {
+    _.erase(this._svg);
+  };
+
+  this.getValues = function () {
+    let values = [];
+    _.forIn(this._data, (record, id) => {
+      if (!record.enabled) return;
+
+      let x = record.x;
+      let y = record.y;
+      values.push({
+        id: record.id,
+        name: record.name,
+        yValue: this._amount[id],
+        color: record.color,
+      })
+    })
+    return values;
+  };
+}
+
+module.exports = PieGraph;
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"graph circle_graph\"> <svg></svg> </div> ";
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0);
+
+const InteractiveBase = __webpack_require__(3);
+const Popup = __webpack_require__(1).singleton;
+
+function PieInteractive(graph) {
+  InteractiveBase.call(this, graph);
+  this._svg = this._canvas;
+}
+
+PieInteractive.prototype = Object.assign({}, InteractiveBase.prototype, {
+  wrap: function (graph) {
+    let self = this;
+    graph.addInterface('IInteractive');
+
+    graph.IInteractive_select = function (x, e) {
+      let target = e.target;
+      let y = _.offsetTop(target);
+
+      let id = target.getAttribute('path-id'); // TODO: sic
+      let values = graph.getValues()
+      let desc = []
+      _.forEach(values, value => {
+        if (id !== value.id) return;
+        desc.push({
+          title: value.name,
+          value: value.yValue,
+          color: value.color
+        })
+      })
+
+      let xValue = 0;
+      self.showPopup(x, y, {
+        desc: desc,
+        // TODO
+        isZoomed: graph.state.isZoomed
+      })
+    }
+
+    graph.IInteractive_deselect = function () {
+      self.hidePopup();
+    }
+  },
+
+  bindHover: function () {
+    if (!this._graph.supportInterface('IInteractive')) {
+      throw new Error("Graph should support IInteractive");
+    }
+
+    let svg = this._graph.svg;
+    let paths = svg.querySelectorAll('path');
+    _.forEach(paths, path => {
+      this._bindHover(path);
+    })
+  },
+
+  _bindHover: function (node) {
+    if (!this._graph.supportInterface('IInteractive')) {
+      throw new Error("Graph should support IInteractive");
+    }
+
+    node.addEventListener('mousemove', (e) => {
+      if (e.target !== node) return;
+      let x = e.clientX - this._graph.marginLeft;
+      if (x < 0) return;
+
+			this._graph.IInteractive_select(x, e);
+    });
+
+    node.addEventListener('mouseleave', (e) => {
+      if (e.relatedTarget === Popup.el ||
+        _.isChild(e.relatedTarget, Popup.el)) return;
+
+			this._graph.IInteractive_deselect();
+    })
+  },
+
+  render: function () {
+    this._canvas = this._graph.svg;
+  }
+})
+
+module.exports = PieInteractive;
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+let LineGraph = __webpack_require__(28)
+let LineInteractive = __webpack_require__(30)
+
+function LineDriver() {
+  this.name = 'line';
+}
+
+LineDriver.prototype = {
+  draw: function (container, data, options) {
+    let graph = new LineGraph(container, data, options);
+
+    if (options && options.withInteractive) {
+      let interactive = new LineInteractive(graph);
+    }
+
+    return graph;
+  }
+}
+module.exports = LineDriver
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0)
+const html = __webpack_require__(29)
+const Grid = __webpack_require__(4)
+const Graph = __webpack_require__(2);
+
+const defaultOptions = {
+  width: 500,
+  height: 100
+}
+
+/**
+ * draw()
+ * getPoints()
+ *
+ * options {Object}
+ *  @key {Boolean} withGrid
+ *  @key {Boolean} scaleY
+ *  @key {Boolean} dualY
+ *  @key {Array} disabled
+ *  @key {Options} isZoomed
+ */
+function LineGraph(container, data, options) {
+  this._container = container;
+  this._options = _.extend({}, defaultOptions, options);
+  this._canvas = null;
+  this._el = null;
+  this._ctx = null;
+  this._data = {};
+  this._grid = options.withGrid ? new Grid(this) : null;
+  //TODO:
+  this._interfaces = [];
+
+  this._xScale = 1;
+  this._yScale = 1;
+  this._xTranslate = 0;
+
+  this._Y = null; // y accumulator
+  this._drawn = false;
+  this._xValueStep = null;
+
+  this.computeData(data, this._options.disabled);
+  this.render();
+  this.draw();
+}
+
+LineGraphProto.prototype = Object.create(Graph.prototype);
+LineGraph.prototype = new LineGraphProto();
+
+function LineGraphProto () {
+  Graph.call(this);
+
+  this.draw = function (xScale, xTranslate, force) {
+    if (force || !this._drawn) {
+      this._computeY()
+      this._drawn = true;
+    }
+    if (this.supportInterface('IInteractive')) {
+      this.IInteractive_deselect();
+    }
+    this._xScale = xScale || this._xScale;
+    this._xTranslate = xTranslate === undefined ? this._xTranslate : xTranslate;
+
+    this._ctx.clearRect(0, 0, this.width, this.height);
+
+    _.forIn(this._data, (record, id) => {
+      if (!record.enabled) return;
+      this._drawLine(record);
+    })
+
+    if (this._grid) this.drawGrid();
+  };
+
+  // move out
+  this.drawGrid = function () {
+    if (!this._grid) return;
+
+    if (!this._options.dualY) {
+      let minXValue = Number.POSITIVE_INFINITY;
+      let maxXValue = Number.NEGATIVE_INFINITY;
+      let minYValue = Number.POSITIVE_INFINITY;
+      let maxYValue = Number.NEGATIVE_INFINITY;
+
+      let c = 0;
+      _.forIn(this._data, (line, k) => {
+        if (!line.enabled) return;
+        c++;
+        minXValue = _.min(line.visibleMinXValue, minXValue);
+        maxXValue = _.max(line.visibleMaxXValue, minXValue);
+        minYValue = _.min(line.visibleMinYValue, minYValue);
+        maxYValue = _.max(line.visibleMaxYValue, maxYValue);
+      });
+      if (!c) return;
+
+      this._grid.draw(minXValue, maxXValue, minYValue, maxYValue);
+    } else {
+      let minValues = [];
+      let maxValues = [];
+      let colors = [];
+      let c = 0;
+      _.forIn(this._data, (line, k) => {
+        if (!line.enabled) return;
+        c++;
+        let min = [];
+        min.push(line.visibleMinXValue)
+        min.push(line.visibleMinYValue)
+        minValues.push(min);
+
+        let max = [];
+        max.push(line.visibleMaxXValue);
+        max.push(line.visibleMaxYValue);
+        maxValues.push(max);
+
+        colors.push(line.color);
+      });
+      if (!c) return;
+      this._grid.drawDualY(minValues, maxValues, colors);
+    }
+  };
+
+  //TODO: merge with getValues();
+  this.getPoints = function (x) {
+    let points = [];
+    _.forIn(this._data, ({enabled}, k) => {
+      if (!enabled) return;
+
+      points.push(this._getPoint(k, x));
+    });
+
+    return points;
+  };
+
+  this.render = function () {
+    let doc = document.createElement('div');
+    doc.innerHTML = html;
+    let el = this._el = doc.firstChild;
+    this._container.appendChild(el);
+
+    this._canvas = el.querySelector('canvas');
+    this._canvas.setAttribute('width', this._options.width);
+    this._canvas.setAttribute('height', this._options.height);
+    this._ctx = this._canvas.getContext('2d');
+  };
+
+  this._computeY = function () {
+    let ids =[];
+    _.forIn(this._data, (line, id) => {
+      if (!line.enabled) return;
+      ids.push(id);
+    });
+
+    if (ids.length === 0) {
+      this._Y = [];
+      return;
+    }
+
+    let Y = [];
+    let x = this._data[ids[0]].x;
+    for (let i = 0, l = x.length; i < l; i++) {
+      let value = 0;
+      _.forEach(ids, id => {
+        let record = this._data[id];
+        value = _.max(record.y[i], value);
+      });
+      Y.push(value);
+    }
+    //TODO:
+    let xValueStep = x[1] - x[0];
+
+    this._xValueStep = xValueStep;
+    this._Y = Y;
+  };
+
+  this._getPoint = function (id, xPoint) {
+    let line = this._data[id];
+    let x = line.x;
+    let y = line.y;
+
+    let xValue = this.interpolateX(xPoint, line.minXValue, line.xRatio);
+    let i = this.getClosestIndexByXValue(xValue, line.x);
+
+    return {
+      id: id,
+      name: line.name,
+      x: this.interpolateXValue(x[i], line.minXValue, line.xRatio),
+      y: this.interpolateYValue(y[i], line.minYValue, line.yRatio),
+      xValue: x[i],
+      yValue: y[i],
+      color: line.color,
+      i: i
+    }
+  };
+
+  this._drawLine = function (line) {
+    let x = line.x;
+    let y = line.y;
+    let Y = this._Y;
+
+    let minXValue = line.minXValue = x[0];
+    let maxXValue = line.maxXValue = _.last(x);
+    let xRatio = line.xRatio = this.width / (maxXValue - minXValue);
+
+    if (this._options.dualY) {
+      Y = line.y;
+    } else if (this._options.scaleY) {
+      Y = this._Y;
+    }
+    if (this._options.scaleY) {
+      let minXValue = this.interpolateX(0, line.minXValue, line.xRatio);
+      let maxXValue = this.interpolateX(this.width, line.minXValue, line.xRatio);
+      let minI = this.getClosestIndexByXValue(minXValue, line.x)
+      let maxI = this.getClosestIndexByXValue(maxXValue, line.x)  // TODO: performance
+      Y = Y.slice(minI, maxI); // TODO: performance
+    }
+    let minYValue = line.minYValue = 0;
+    let maxYValue = line.maxYValue = _.max(Y);
+    let yRatio = line.yRatio = this.height / (maxYValue - minYValue);
+
+    this._ctx.beginPath();
+    this._ctx.strokeStyle = line.color;
+    this._ctx.lineWidth = this._getLineWidth();
+    this._ctx.lineJoin = 'bevel';
+    for (i = 0; i < x.length; i++) {
+      let x1 = this.interpolateXValue(x[i], minXValue, xRatio);
+      let y1 = this.interpolateYValue(y[i], minYValue, yRatio);
+      (i == 0) ? this._ctx.moveTo(x1, y1) : this._ctx.lineTo(x1, y1);
+    }
+
+    this._ctx.stroke();
+
+    line.visibleMinXValue = this.interpolateX(0, minXValue, xRatio);
+    line.visibleMaxXValue = this.interpolateX(this.width, minXValue, xRatio);
+    line.visibleMinYValue = this.interpolateY(this.height, minYValue, yRatio);
+    line.visibleMaxYValue = this.interpolateY(0, minYValue, yRatio);
+  };
+
+  // TODO: find better function
+  this._getLineWidth = function () {
+    return 1 * _.dpr;
+  };
+
+  Object.defineProperty(this, 'xValueStep', { get() { return this._xValueStep; } });
+}
+
+module.exports = LineGraph
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"graph line_graph\"> <canvas></canvas> </div> ";
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0);
+__webpack_require__(31);
+
+const InteractiveBase = __webpack_require__(3);
+const InteractiveMixin = __webpack_require__(32);
+let Popup = __webpack_require__(1).singleton;
+
+function LineInteractive(graph) {
+  InteractiveBase.call(this, graph);
+  this._points = {};
+  this._svg = this._canvas;
+
+  this._line = null;
+  this._xValue = null;
+
+  this._onClick = this._onClick.bind(this);
+}
+
+LineInteractive.prototype = Object.assign({}, InteractiveBase.prototype, InteractiveMixin, {
+  wrap: function (graph) {
+    graph.addInterface('IInteractive');
+    let self = this;
+
+    graph.IInteractive_select = function (x) {
+      let points = this.getPoints(x);
+      if (!points.length) return;
+
+      let xValue;
+      let desc = [];
+      points.forEach(point => {
+        self._showPoint(point);
+
+        xValue = point.xValue;
+        x = point.x;
+
+        desc.push({
+          title: point.name,
+          value: point.yValue,
+          color: point.color
+        })
+      });
+
+      self._xValue = xValue;
+      self._showLine(x);
+
+      let y = _.offsetTop(self._svg) // TODO:
+      x += _.offsetLeft(self._svg)
+      self.showPopup(x, y, {
+        xValue: xValue,
+        desc: desc,
+        onClick: self._onClick,
+        //TODO
+        isZoomed: graph.state.isZoomed,
+        // TODO
+        xValueStep: graph.xValueStep
+      })
+    }
+
+    graph.IInteractive_deselect = function () {
+      self._hideLine();
+      self._hidePoints();
+      self.hidePopup();
+
+      self.unbindKeyboard();
+      self._xValue = null;
+    }
+
+    graph.IInteractive_click = function () {
+      self._onClick();
+    }
+  },
+
+  _onClick: function (e) {
+    let event = document.createEvent('Event');
+    event.initEvent('zoom', true, true);
+    event.xValue = this._xValue;
+    event.xTranslate = this._graph.state.xTranslate;
+    event.xScale = this._graph.state.xScale;
+
+    this._svg.dispatchEvent(event);
+  },
+
+  _showLine: function(x) {
+    let l = this._line;
+    if (!l) {
+      l = document.createElementNS(_.SVG_NS, 'line');
+      this._svg.insertBefore(l, this._svg.firstChild);
+      this._line = l;
+    }
+
+    l.setAttribute('x1', x + this._graph.marginLeft);
+    l.setAttribute('y1', this._graph.marginTop);
+    l.setAttribute('x2', x + this._graph.marginLeft);
+    l.setAttribute('y2', this._graph.height + this._graph.marginTop);
+    l.style.display = 'block';
+  },
+
+  _showPoint: function (point) {
+    let p = this._points[point.name];
+    if (!p) {
+      p = document.createElementNS(_.SVG_NS, 'circle');
+      this._svg.appendChild(p);
+      this._points[point.name] = p;
+    }
+
+    // TODO:
+    p.setAttribute('cx', this._graph.marginLeft + point.x);
+    p.setAttribute('cy', this._graph.marginTop + point.y);
+    p.setAttribute('stroke', point.color);
+    p.setAttribute('stroke-width', 1  * _.dpr);
+    p.setAttribute('r', 4 * _.dpr);
+    p.style.display = 'block';
+  },
+
+  _hideLine: function () {
+    let l = this._line;
+    if (!l) return;
+
+    l.style.display = 'none';
+  },
+
+  _hidePoints: function () {
+    _.forIn(this._points, point => {
+      point.style.display = 'none';
+    })
+  }
+})
+
+module.exports = LineInteractive;
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports) {
+
+module.exports = {
+  bindKeyboard: function () {
+    if (this.__keyboardIsBinded) return;
+    this.__keyboardIsBinded = true;
+    window.addEventListener('keydown', this.__keyDown);
+  },
+
+  unbindKeyboard: function () {
+    this.__keyboardIsBinded = false;
+    window.removeEventListener('keydown', this.__keyDown);
+  },
+
+  __keyDown: function (e) {
+    switch (e.keyCode) {
+      case 37: // left
+        this._graph.selectPrev(this._x);
+        break;
+      case 39: //right
+        this._graph.selectNext(this._x);
+        break;
+      default:
+        break;
+    }
+  }
+};
+
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const HistogramGraph = __webpack_require__(7)
+let HistogramInteractive = __webpack_require__(8)
+
+function HistogramDriver(container) {
+  this.name = 'histogram';
+}
+
+HistogramDriver.prototype = {
+  draw: function (container, data, options) {
+    let graph = new HistogramGraph(container, data, options);
+
+    if (options && options.withInteractive) {
+      let interactive = new HistogramInteractive(graph);
+    }
+
+    return graph;
+  }
+}
+
+module.exports = HistogramDriver;
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"graph histogram_graph\"> <canvas></canvas> </div> ";
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"histogram_graph_interactive graph_interactive\"></div> ";
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const StackedHistogramGraph = __webpack_require__(39)
+let HistogramInteractive = __webpack_require__(8)
+
+function StackedHistogramDriver(container) {
+  this.name = 'stackedHistogram';
+}
+
+StackedHistogramDriver.prototype = {
+  draw: function (container, data, options) {
+    let graph = new StackedHistogramGraph(container, data, options);
+
+    if (options && options.withInteractive) {
+      let interactive = new HistogramInteractive(graph);
+    }
+    return graph;
+  }
+}
+
+module.exports = StackedHistogramDriver;
+
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0)
+const html = __webpack_require__(40)
+
+const Graph = __webpack_require__(2)
+const HistogramGraph = __webpack_require__(7)
+const Grid = __webpack_require__(4)
+
+const defaultOptions = {
+  width: 500,
+  height: 100
+}
+
+/**
+ *
+ * options {Object}
+ *  @key {Boolean} withGrid
+ *  @key {Boolean} scaleY
+ *  @key {Boolean} disabled
+ */
+function StackedHistogramGraph(container, data, options) {
+  this._container = container;
+  this._options = _.extend({}, defaultOptions, options);
+  this._canvas = null;
+  this._el = null;
+  this._ctx = null;
+  this._data = null;
+  this._grid = options.withGrid ? new Grid(this) : null;
+  //TODO:
+  this._interfaces = [];
+
+  this._xScale = 1;
+  this._yScale = 1;
+  this._xTranslate = 0;
+
+  this._Y = null; // y accumulator
+  this._stack = [];
+  this._drawn = false;
+
+  this.computeData(data, this._options.disabled);
+  this.render();
+  this.draw();
+}
+
+StackedHistogramProto.prototype = Object.create(HistogramGraph.prototype);
+StackedHistogramGraph.prototype = new StackedHistogramProto();
+
+function StackedHistogramProto() {
+  Graph.call(this);
+
+  this.draw = function (xScale, xTranslate, force, highlightX) {
+    if (force || !this._drawn) {
+      this._computeY()
+      this._drawn = true;
+    }
+    this._xScale = xScale || this._xScale;
+    this._xTranslate = xTranslate === undefined ? this._xTranslate : xTranslate;
+
+    this._ctx.clearRect(0, 0, this.width, this.height);
+    this._stack = [];
+
+    _.forIn(this._data, (bar, id) => {
+      if (!bar.enabled) return;
+      this._drawBar(bar, highlightX);
+    })
+
+    // TODO:
+    if (this._grid) this.drawGrid();
+  };
+
+  this.select = function (x) {
+    this.draw(this._xScale, this._xTranslate, false, x);
+  };
+
+  this.deselect = function () {
+    this.draw(this._xScale, this._xTranslate);
+  };
+
+  this.render = function () {
+    let doc = document.createElement('div');
+    doc.innerHTML = html;
+    let el = this._el = doc.firstChild;
+    this._container.appendChild(el);
+
+    this._canvas = el.querySelector('canvas');
+    this._canvas.setAttribute('width', this._options.width);
+    this._canvas.setAttribute('height', this._options.height);
+    this._ctx = this._canvas.getContext('2d');
+  };
+
+  this._drawBar = function (bar, highlightX) {
+    let x = bar.x;
+    let y = bar.y;
+    let Y = this._Y;
+
+    let minXValue = bar.minXValue = x[0];
+    let maxXValue = bar.maxXValue = _.last(x);
+    let xRatio = bar.xRatio = this.width / (maxXValue - minXValue);
+
+    if (this._options.scaleY) {
+      let minXValue = this.interpolateX(0, bar.minXValue, bar.xRatio);
+      let maxXValue = this.interpolateX(this.width, bar.minXValue, bar.xRatio);
+      let minI = this.getClosestIndexByXValue(minXValue, bar.x)
+      let maxI = this.getClosestIndexByXValue(maxXValue, bar.x)
+      Y = Y.slice(minI, maxI);
+    }
+    let minYValue = bar.minYValue = 0;
+    let maxYValue = bar.maxYValue = _.max(Y);
+
+    let yRatio = bar.yRatio = this.height / (maxYValue - minYValue);
+
+    let xStep = (this.width / x.length) * this._xScale;
+    this._ctx.fillStyle = bar.color;
+    if (highlightX) {
+      this._ctx.globalAlpha = 0.5;
+      let highlightXValue = this.interpolateX(highlightX, bar.minXValue, bar.xRatio);
+      let j = this.getClosestIndexByXValue(highlightXValue, bar.x);
+      for (let i = 0, length = x.length; i < length; i++) {
+        let stackHeight = getStackHeight.call(this, i);
+        let height = this.interpolateYValue(stackHeight, null, yRatio);
+        let x1 = this.interpolateXValue(x[i], minXValue, xRatio);
+        let y1 = this.interpolateYValue(stackHeight + y[i], null, yRatio);
+        let x2 = i < length - 1 ? this.interpolateXValue(x[i + 1], minXValue, xRatio) : xStep + x1;
+        this._ctx.globalAlpha = (i === j) ? 1 : 0.5;
+
+        this._ctx.fillRect(x1, y1, x2 - x1, height - y1);
+      }
+    } else {
+      this._ctx.globalAlpha = 1;
+      for (let i = 0, length = x.length; i < length; i++) {
+        let stackHeight = getStackHeight.call(this, i);
+        let height = this.interpolateYValue(stackHeight, null, yRatio);
+        let x1 = this.interpolateXValue(x[i], minXValue, xRatio);
+        let y1 = this.interpolateYValue(stackHeight + y[i], null, yRatio);
+        let x2 = i < length - 1 ? this.interpolateXValue(x[i + 1], minXValue, xRatio) : xStep + x1;
+
+        this._ctx.fillRect(x1, y1, x2 - x1, height - y1);
+      }
+    }
+
+    this._stack.push(bar.id);
+    bar.visibleMinXValue = this.interpolateX(0, minXValue, xRatio);
+    bar.visibleMaxXValue = this.interpolateX(this.width, minXValue, xRatio);
+    bar.visibleMinYValue = this.interpolateY(this.height, minYValue, yRatio);
+    bar.visibleMaxYValue = this.interpolateY(0, minYValue, yRatio);
+
+    function getStackHeight(i) {
+      let value = 0;
+      _.forEach(this._stack, id => {
+          value += this._data[id].y[i];
+      });
+
+      return value;
+    }
+  };
+
+  this._computeY = function () {
+    let ids =[];
+    _.forIn(this._data, (record, id) => {
+      if (!record.enabled) return;
+      ids.push(id);
+    });
+
+    if (ids.length === 0) {
+      this._Y = [];
+      return;
+    }
+
+    let Y = [];
+    let x = this._data[ids[0]].x;
+    for (let i = 0, l = x.length; i < l; i++) {
+      let value = 0;
+      _.forEach(ids, id => {
+        let record = this._data[id];
+        value += record.y[i];
+      });
+      Y.push(value);
+    }
+
+    this._Y = Y;
+  };
+}
+
+
+module.exports = StackedHistogramGraph;
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"graph stacked_histogram_graph\"> <canvas></canvas> </div> ";
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const html = __webpack_require__(42);
+const _ = __webpack_require__(0);
+const moment = __webpack_require__(5);
+
+__webpack_require__(43)
+
+let width = _.requestWidth();
+let horMargin = 5;
+const CANVAS_WIDTH = width - horMargin * 2; //TODO?
+const CANVAS_HEIGHT = width * 0.7;
+
+function Plot(parentNode, options) {
+  let doc = document.createElement('div');
+  doc.innerHTML = html;
+  let el = this._el = doc.firstChild;
+  parentNode.appendChild(el);
+  this._container = el;
+
+  el.querySelector('.zoom_out').addEventListener('click', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    let event = document.createEvent('Event');
+    event.initEvent('zoomout', true, true);
+    el.dispatchEvent(event);
+  })
+}
+
+Plot.prototype = {
+  /**
+   * options {Object}
+   *  title {String}
+   *  isZoomed {Boolean}
+   *  disabled {Array}
+   */
+  draw: function (data, driver, options) {
+    let dualY = !!data.y_scaled;
+
+    this.clean();
+    if (options && options.isZoomed) {
+      _.addClass(this._el, 'is_zoomed');
+    } else {
+      _.removeClass(this._el, 'is_zoomed');
+      this.setTitle(options && options.title);
+    }
+    this._graph = driver.draw(this._container.querySelector('.plot_internal'), data, {
+      width: CANVAS_WIDTH,
+      height: CANVAS_HEIGHT,
+      withGrid: true,
+      withInteractive: true,
+      scaleY: true,
+      dualY: dualY,
+      disabled: options && options.disabled,
+      //TODO:
+      isZoomed: !!(options && options.isZoomed)
+    });
+  },
+
+  appear: function () {
+    _.removeClass(this._container, 'disappear');
+  },
+
+  disappear: function () {
+    _.addClass(this._container, 'disappear');
+  },
+
+  clean: function () {
+    let plot = this._container.querySelector('.plot_internal');
+    _.erase(plot);
+  },
+
+  reset: function () {
+    this._slider.reset()
+  },
+
+  update: function (xScale, xTranslate) {
+    this._graph.draw(xScale, xTranslate);
+    let minXValue = this._graph.getVisibleMinXValue();
+    let maxXValue = this._graph.getVisibleMaxXValue();
+
+    let s = new Date(minXValue);
+    let e = new Date(maxXValue);
+    const DAY = 1000 * 60 * 60 * 24;
+
+    if (e - s <= DAY * 1.3) {
+      s = new Date((maxXValue + minXValue) / 2)
+      let ss = `${s.getUTCDate()} ${moment.getMonth(s)} ${s.getUTCFullYear()}`;
+      this.setDescription(`${ss}`);
+    } else {
+      let ss = `${s.getUTCDate()} ${moment.getMonth(s)} ${s.getUTCFullYear()}`;
+      let es = `${e.getUTCDate()} ${moment.getMonth(e)} ${e.getUTCFullYear()}`;
+      this.setDescription(`${ss} - ${es}`);
+    }
+  },
+
+  setTitle: function (title) {
+    this._container
+      .querySelector('.plot_title')
+      .innerHTML = title || '';
+  },
+
+  setDescription: function (text) {
+    this._container
+      .querySelector('.plot_range')
+      .innerHTML = text || '';
+  },
+
+  get container() {
+    return this._container;
+  },
+
+  get graph() {
+    return this._graph;
+  }
+}
+
+module.exports = Plot;
+
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=plot> <p class=plot_heading> <a href=# class=zoom_out> <span class=icon> <svg xmlns=http://www.w3.org/2000/svg viewBox=\"0 0 512 512\"><path d=\"M304 192v32c0 6.6-5.4 12-12 12H124c-6.6 0-12-5.4-12-12v-32c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm201 284.7L476.7 505c-9.4 9.4-24.6 9.4-33.9 0L343 405.3c-4.5-4.5-7-10.6-7-17V372c-35.3 27.6-79.7 44-128 44C93.1 416 0 322.9 0 208S93.1 0 208 0s208 93.1 208 208c0 48.3-16.4 92.7-44 128h16.3c6.4 0 12.5 2.5 17 7l99.7 99.7c9.3 9.4 9.3 24.6 0 34zM344 208c0-75.2-60.8-136-136-136S72 132.8 72 208s60.8 136 136 136 136-60.8 136-136z\"/></svg> </span> <span>Zoom Out<span> </span></span></a> <span class=plot_title></span> <span class=plot_range></span> </p> <div class=plot_internal></div> </div> ";
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0)
+const v = __webpack_require__(9)
+const Slider = __webpack_require__(45)
+
+const html = __webpack_require__(46)
+__webpack_require__(10)
+
+
+function Preview(container, options) {
+  this._container = container;
+  this.render();
+
+  this._slider = new Slider(this._el, options);
+  this._graph = null;
+}
+
+Preview.prototype = {
+  draw: function (data, driver, options) {
+    let canvas = this._el.querySelector('.canvas');
+    let cs = getComputedStyle(this._el.parentNode);
+
+    this.clean();
+    let dualY = !!data.y_scaled;
+    this._graph = driver.draw(canvas, data, {
+      width: parseFloat(cs.width) - v.SLIDER_LEFT_WIDTH - v.SLIDER_RIGHT_WIDTH,
+      height: v.CANVAS_HEIGHT,
+      dualY: dualY,
+      disabled: options && options.disabled
+    });
+  },
+
+  appear: function () {
+    _.removeClass(this._el, 'disappear');
+  },
+
+  disappear: function () {
+    _.addClass(this._el, 'disappear');
+  },
+
+  update(xScale, xTranslate) {
+    this._slider.posByScale(xScale, xTranslate);
+  },
+
+  reset: function () {
+    this._slider.reset();
+  },
+
+  clean: function () {
+    let canvas = this._el.querySelector('.canvas');
+    _.erase(canvas);
+  },
+
+  get width() {
+    return this._el.getBoundingClientRect().width;
+  },
+
+  get height() {
+    return this._el.getBoundingClientRect().height;
+  },
+
+  get graph() {
+    return this._graph;
+  },
+
+  render: function () {
+      let doc = document.createElement('div');
+      doc.innerHTML = html;
+      this._el = doc.firstChild;
+      this._container.appendChild(this._el);
+
+      let w = _.requestWidth();
+      this._el.style.width = `${w}px`;
+      this._el.style.height = `${v.PREVIEW_HEIGHT - v.SLIDER_BORDER * 2 }px`
+
+      let canvas = this._el.querySelector('.canvas');
+      canvas.style.marginLeft = `${v.SLIDER_LEFT_WIDTH}px`;
+      canvas.style.marginRight = `${v.SLIDER_RIGHT_WIDTH}px`;
+      canvas.style.width = `${w - v.SLIDER_LEFT_WIDTH - v.SLIDER_RIGHT_WIDTH}px`
+      canvas.style.height = `${v.CANVAS_HEIGHT}px`
+  }
+}
+
+module.exports = Preview
+
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+let _ = __webpack_require__(0);
+let v = __webpack_require__(9)
+__webpack_require__(10)
+
+// classNames
+const cn = {
+  SLIDER: '.slider',
+  LEFT: '.slider_left',
+  RIGHT: '.slider_right',
+  VIEW: '.slider_view',
+  OVERLAY_LEFT: '.overlay_left',
+  OVERLAY_RIGHT: '.overlay_right'
+}
+
+
+const defaultConfig = {
+  sliderWidth: 100 * _.dpr,
+  sliderMinWidth: 20 * _.dpr,
+  onChange: null
+}
+
+function Slider(el, config) {
+  let slider = el.querySelector(cn.SLIDER)
+  this._el = slider;
+  this._el.style.width = el.getBoundingClientRect().width;
+
+  this.sliderUI = {
+    left: slider.querySelector(cn.LEFT),
+    right: slider.querySelector(cn.RIGHT),
+    view: slider.querySelector(cn.VIEW),
+  }
+
+  this.overlayUI = {
+    left: slider.querySelector(cn.OVERLAY_LEFT),
+    right: slider.querySelector(cn.OVERLAY_RIGHT),
+  }
+
+  this.onChange = config.onChange;
+  this.config = _.extend({}, defaultConfig, config);
+  this.render();
+  this._initUI();
+}
+
+Slider.prototype = {
+  pos: function (x, width) {
+    if (x < 0) x = 0;
+    if (width < this.config.sliderMinWidth) width = this.config.sliderMinWidth;
+
+    const { left, right, view } = this.sliderUI;
+
+    view.style.width = `${width}px`;
+    if (x < v.SLIDER_LEFT_WIDTH) {
+      x = v.SLIDER_LEFT_WIDTH;
+    }
+    this.overlayUI.left.style.width = `${x}px`
+
+    let leftWidth = left.getBoundingClientRect().width;
+    let rightWidth = this.width - width - x
+    this.overlayUI.right.style.width = `${rightWidth}px`
+
+    this._onChange();
+  },
+
+  posByScale: function (xScale, xTranslate) {
+    let { left, right, view } = this.sliderUI;
+
+    let leftWidth = _.width(left);
+    let rightWidth = _.width(right);
+    let width = this.width - leftWidth - rightWidth;
+
+    let viewWidth = width / xScale;
+    //TODO: bug
+    if (viewWidth >= width) {
+      viewWidth = width;
+    }
+
+    let x = _.round(xTranslate * viewWidth + leftWidth);
+    this.pos(x, _.round(viewWidth));
+  },
+
+  reset: function () {
+    this.pos(0, this.config.sliderWidth);
+  },
+
+  _initUI: function (config) {
+    this._el.style.display = "block";
+    this.pos(0, this.config.sliderWidth);
+
+    this._bindUI();
+  },
+
+  getXScale() {
+    let { left, right, view } = this.sliderUI;
+
+    let viewWidth = _.width(view);
+    let leftWidth = _.width(left);
+    let rightWidth = _.width(right);
+    let width = this.width - leftWidth - rightWidth;
+
+    //console.log('getXScale', width/viewWidth);
+    return width / viewWidth;
+  },
+
+  getXTranslate() {
+    let { left, view } = this.sliderUI;
+    let viewWidth = _.width(view);
+    let leftWidth = _.width(left);
+    //console.log('getXTranslate', (view.offsetLeft - leftWidth) / viewWidth);
+    return (view.offsetLeft - leftWidth) / viewWidth;
+  },
+
+  // TODO
+  // - refactor
+  getVisibleCoords() {
+    let { left, view } = this.sliderUI;
+    let width = view.getBoundingClientRect().width;
+    let leftWidth = left.getBoundingClientRect().width;
+    let offsetX = view.offsetLeft;
+
+    return [ offsetX - leftWidth, offsetX + width ];
+  },
+
+  // TODO: event?
+  _onChange() {
+    if (this.onChange) {
+      this.onChange(this.getXScale(), this.getXTranslate());
+    }
+  },
+
+  // TODO:
+  // - refactor
+  // - speed improvement
+  _bindUI: function () {
+    const config = this.config;
+    const { left, right, view } = this.sliderUI;
+    const width = this.width;
+    const leftWidth = v.SLIDER_LEFT_WIDTH;
+    const rightWidth = v.SLIDER_RIGHT_WIDTH;
+
+    let pOffsetLeft = this._el.getBoundingClientRect().left;
+
+    this._bindSlider(left, (e) => {
+      let x = e.clientX - leftWidth - pOffsetLeft;
+      if (e.changedTouches) { // TouchedEvent
+        let touch = e.changedTouches[0];
+        x = touch.clientX - leftWidth - pOffsetLeft;
+      }
+      if (x < 0) x = 0;
+
+      let overlayLeftWidth = x + leftWidth;
+      let diff = this.overlayUI.left.getBoundingClientRect().width - overlayLeftWidth;
+      let viewWidth = view.getBoundingClientRect().width + diff;
+
+      if (viewWidth <= config.sliderMinWidth) {
+        overlayLeftWidth += (viewWidth - config.sliderMinWidth);
+        viewWidth = config.sliderMinWidth;
+      }
+
+      this.overlayUI.left.style.width = `${overlayLeftWidth}px`;
+      view.style.width = `${viewWidth}px`;
+
+      this._onChange();
+    });
+
+    this._bindSlider(right, (e) => {
+      let diff = e.movementX;
+      let prevMidWidth = view.getBoundingClientRect().width;
+      if (e.changedTouches) { // TouchedEvent
+        let touch = e.changedTouches[0];
+        let overlayLeftWidth = this.overlayUI.left.getBoundingClientRect().width;
+        let x = touch.clientX - leftWidth;
+        diff = x - prevMidWidth - overlayLeftWidth - pOffsetLeft;
+      }
+      let midWidth =  prevMidWidth + diff;
+      if (midWidth < config.sliderMinWidth) {
+        diff = config.sliderMinWidth - prevMidWidth;
+        midWidth = prevMidWidth + diff;
+      }
+
+      let overlayRightWidth = this.overlayUI.right.getBoundingClientRect().width - diff;
+      if (overlayRightWidth < rightWidth) {
+        midWidth += overlayRightWidth - rightWidth;
+        overlayRightWidth = rightWidth;
+      }
+
+      this.overlayUI.right.style.width = `${overlayRightWidth}px`;
+      view.style.width = `${midWidth}px`;
+
+      this._onChange();
+    });
+
+    this._bindSlider(view, (e) => {
+      let diff = e.movementX;
+      if (e.changedTouches) { // TouchedEvent
+        let touch = e.changedTouches[0];
+        if (!this._sliderClientX) {
+          this._sliderClientX = touch.clientX;
+          return;
+        }
+        diff = touch.clientX - this._sliderClientX;
+        this._sliderClientX = touch.clientX;
+      }
+
+      let overflowLeftWidth = this.overlayUI.left.getBoundingClientRect().width + diff;
+      if (overflowLeftWidth < leftWidth) {
+        diff += leftWidth - overflowLeftWidth;
+        overflowLeftWidth = leftWidth;
+      }
+
+      let overflowRightWidth = this.overlayUI.right.getBoundingClientRect().width - diff;
+      if (overflowRightWidth < rightWidth) {
+        diff -= rightWidth - overflowRightWidth;
+        overflowRightWidth = rightWidth;
+        overflowLeftWidth = this.overlayUI.left.getBoundingClientRect().width + diff;
+      }
+
+      this.overlayUI.left.style.width = `${overflowLeftWidth}px`;
+      this.overlayUI.right.style.width = `${overflowRightWidth}px`;
+
+      this._onChange();
+    });
+  },
+
+  _bindSlider(UI, cb) {
+    let self = this;
+    const doc = UI.ownerDocument;
+
+		// https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
+		let supportsPassive = false;
+		try {
+			let opts = Object.defineProperty({}, 'passive', {
+				get: function() {
+					supportsPassive = true;
+				}
+			});
+			window.addEventListener("testPassive", null, opts);
+			window.removeEventListener("testPassive", null, opts);
+		} catch (e) {}
+
+    UI.addEventListener('mousedown', initDrag);
+    UI.addEventListener('touchstart', initDrag, supportsPassive ? {passive: true} : false);
+    function initDrag() {
+      _.addClass(self._el, 'grabbing');
+      doc.addEventListener('mouseup', stopDrag)
+      doc.addEventListener('touchend', stopDrag)
+      subscribeOnMove();
+    }
+
+    function stopDrag() {
+      _.removeClass(self._el, 'grabbing');
+      unsubscribeOnMove();
+      self._sliderClientX = null;
+      doc.removeEventListener('mouseup', stopDrag);
+      doc.removeEventListener('touchend', stopDrag);
+    }
+
+    function subscribeOnMove() {
+      self._el.addEventListener('mousemove', moveListener);
+      self._el.addEventListener('touchmove', moveListener, supportsPassive ? {passive: true} : false);
+    }
+
+    function unsubscribeOnMove() {
+      self._el.removeEventListener('mousemove', moveListener);
+      self._el.removeEventListener('touchmove', moveListener, supportsPassive ? {passive: true} : false);
+    }
+
+    function moveListener(e) { cb(e); }
+  },
+
+  get width() {
+    return _.width(this._el);
+  },
+
+  get height() {
+    return _.height(this._el);
+  },
+
+  render: function () {
+    this._el.style.height = `${v.CANVAS_HEIGHT}px`
+
+    let { left, right, view } = this.sliderUI;
+    left.style.width = `${v.SLIDER_LEFT_WIDTH}px`
+    left.style.height = `${v.SLIDER_HEIGHT - v.SLIDER_BORDER}px`
+    left.style.marginTop = `-${v.SLIDER_BORDER}px`
+    right.style.width = `${v.SLIDER_RIGHT_WIDTH}px`
+    right.style.height = `${v.SLIDER_HEIGHT - v.SLIDER_BORDER}px`
+    right.style.marginTop = `-${v.SLIDER_BORDER}px`
+
+    view.style.height = `${v.SLIDER_HEIGHT - v.SLIDER_BORDER}px`
+    view.style.marginTop = `-${v.SLIDER_BORDER}px`
+    view.style.borderTopWidth = `${v.SLIDER_BORDER}px`
+    view.style.borderBottomWidth = `${v.SLIDER_BORDER}px`
+
+    this.overlayUI.left.style.height = `${v.CANVAS_HEIGHT}px`;
+    this.overlayUI.right.style.height = `${v.CANVAS_HEIGHT}px`;
+  },
+}
+
+module.exports = Slider
+
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=preview> <div class=canvas></div> <div class=slider> <div class=\"overlay overlay_left\"> <div class=slider_left><span></span></div> </div> <div class=slider_view> </div> <div class=\"overlay overlay_right\"> <div class=slider_right><span></span></div> </div> </div> </div> ";
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const _ = __webpack_require__(0)
+
+const Checkbox = __webpack_require__(48)
+
+function CheckboxGroup(container) {
+  this._container = container;
+  this._checked = 0;
+  this._options = { minChecked: 1 };
+  this._el = null;
+  this.render();
+}
+
+CheckboxGroup.prototype = {
+  draw: function (data, options) {
+    _.erase(this._el)
+    this._checked = 0;
+    _.extend(this._options, options)
+
+    let disabled = options && options.disabled;
+    _.forIn(data.types, (type, k) => {
+      if (k == 'x') return;
+      let checked = true;
+      if (disabled && disabled.indexOf(k) !== -1) checked = false;
+      if (checked) {
+        this._checked++;
+      }
+
+      let c = new Checkbox(this._el, {
+        checked: checked,
+        id: k,
+        label: data.names[k],
+        color: data.colors[k],
+        onChange: this._onChange.bind(this, k)
+      });
+    })
+  },
+
+  _onChange: function (k, enabled) {
+    enabled ? this._checked++ : this._checked--;
+    this._options.onChange(k, enabled);
+  },
+
+  render: function () {
+    let controls = document.createElement('div');
+    this._container.appendChild(controls);
+    this._el = controls;
+
+    this._el.addEventListener('click', (e) => {
+      let t = e.target;
+      let c = this._getCheckboxNode(t);
+      if (!c) return;
+
+      if (c.getAttribute('checked') === 'true') {
+        if (this._checked === this._options.minChecked) {
+          _.shake(c);
+          e.stopPropagation();
+          return;
+        }
+      }
+
+    }, true)
+  },
+
+  _getCheckboxNode: function (node) {
+    while (node && node != this._el) {
+      if (_.hasClass(node, 'custom_checkbox')) return node;
+      node = node.parentNode;
+    }
+
+    return null;
+  }
+}
+
+module.exports = CheckboxGroup;
+
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const html = __webpack_require__(49);
+const _ = __webpack_require__(0);
+
+__webpack_require__(50);
+
+const defaultOptions = {
+  label: null,
+  onChange: function () {},
+  checked: false
+}
+
+function Checkbox(container, options) {
+  this._container = container;
+  this._el = this._init(); // TODO;
+  this._options = _.extend({}, defaultOptions, options);
+
+  this._input = this._el.querySelector('input[type="checkbox"]');
+  this._label = this._el.querySelector('label');
+
+  let rnd = Math.ceil(Math.random() * 100);
+  let id = this._options.id
+
+  this._input.setAttribute('id', `${id}-checkbox-${rnd}`);
+  this._label.innerHTML = this._options.label;
+  this._label.setAttribute('for', `${id}-checkbox-${rnd}`);
+
+  this._input.checked = !!options.checked;
+  this._el.setAttribute('checked', !!options.checked)
+  _.addClass(this._el, 'active')
+
+  this._el.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.toggle();
+  })
+
+  if (this._input.checked) {
+    _.addClass(this._el, 'checked')
+    //TODO: with classes
+    this._el.style.background = this._options.color;
+    this._el.style.color = 'white';
+  } else {
+    _.removeClass(this._el, 'checked')
+    //TODO: with classes
+    this._el.style.color = this._options.color;
+    this._el.style.background = 'none';
+  }
+  this._el.style.borderColor = this._options.color;
+}
+
+Checkbox.prototype = {
+  toggle: function () {
+    this._input.checked = !this._input.checked;
+    this._el.setAttribute('checked', this._input.checked)
+    if (this._input.checked) {
+      _.addClass(this._el, 'checked')
+      //TODO: with classes
+      this._el.style.color = 'white';
+      this._el.style.background = this._options.color;
+    } else {
+      _.removeClass(this._el, 'checked')
+      //TODO: with classes
+      this._el.style.color = this._options.color;
+      this._el.style.background = 'none';
+    }
+    this._options.onChange(this._input.checked);
+  },
+
+  _init: function () {
+    let doc = document.createElement('div');
+    doc.innerHTML = html;
+    let el = doc.firstChild;
+    this._container.appendChild(el);
+    return el;
+  }
+}
+
+module.exports = Checkbox;
+
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports) {
+
+module.exports = "<span class=custom_checkbox> <input type=checkbox /> <svg xmlns=http://www.w3.org/2000/svg viewBox=\"0 0 512 512\"><path d=\"M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z\"/></svg> <label></label> </span> ";
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ })
+/******/ ]);
