@@ -1,7 +1,7 @@
 ---
 layout: post
 title: About
-permalink: /about/
+permalink: /hidden/
 ---
 
 ![](https://jiojiajiu.github.io/assets/page1.png)

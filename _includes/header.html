@@ -14,6 +14,7 @@
       </a>
 
       <div class="trigger">
+        {% comment %}
         {% assign pages = site.pages | where: "name",  "about.md" %}
         {% for page in pages limit:1 %}
           {% if page.title %}
@@ -21,7 +22,6 @@
           {% endif %}
         {% endfor %}
 
-        {% comment %}
         {% for page in site.pages %}
           {% if page.title %}
           <a class="page-link" href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>

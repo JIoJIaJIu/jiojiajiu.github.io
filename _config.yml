@@ -22,7 +22,8 @@ defaults:
     values:
       layout: "default"
 plugins:
-  - hash-joiner
+  - jekyll_elm
+  - jekyll-redirect-from
 exclude:
   - package.json
   - package-lock.json
